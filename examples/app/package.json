@@ -1,0 +1,29 @@
+{
+  "name": "@examples/app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm esbuild src/** --bundle --outdir=www",
+    "dev": "malita dev",
+    "serve": "cd ./www && serve",
+    "start": "malita",
+    "mbuild": "malita build"
+  },
+  "dependencies": {
+    "@alita/flow": "^3.0.0-beta.5",
+    "malita": "workspace:*",
+    "@malitajs/keepalive": "workspace:*",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "description": "",
+  "devDependencies": {
+    "@types/react-dom": "^18.0.2",
+    "serve": "^13.0.2"
+  }
+}

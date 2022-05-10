@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <body>
+    <div id="malita"> loading...</div>
+    <script src="./packages/malita/node_modules/react/umd/react.development.js"></script>
+    <script src="./packages/malita/node_modules/react-dom/umd/react-dom.development.js"></script>
+    <script src="./packages/malita/node_modules//babel-standalone/babel.min.js"></script>
+    <script>
+      // 第一步操作
+      // const root = document.getElementById('malita');
+      // root.innerHTML = '<span>hello malita~</span>';
+      // root.addEventListener('click', (e) => {
+      //   e.target.innerHTML = '<span>hi~</span>';
+      // })
+    </script>
+    <script>
+      // 第二步操作
+      // function Model() {
+      //   this.text = 'hello malita~';
+      //   this.setText = (text) => this.text = text; 
+      // }
+
+      // function View(controller){
+      //   const self = this;
+      //   self.root = document.getElementById('malita');
+      //   self.root.addEventListener('click', controller.onClick);
+      //   this.render = () => {
+      //     const text = controller.getModel().text;
+      //     self.root.innerHTML = `<span>${text}</span>`;
+      //   }
+      // }
+
+      // function Controller(model) {
+      //   const self = this;
+      //   self.model = model;
+      //   this.getModel = () => {
+      //     return self.model;
+      //   }
+      //   this.onClick = (e) => {
+      //     self.model.setText('hi~');
+      //     e.target.innerHTML = `<span>${self.model.text}</span>`;
+      //   }
+      // }
+
+      // const model = new Model();
+      // const controller = new Controller(model);
+      // const view = new View(controller);
+      // view.render();
+    </script>
+    <script type="text/babel">
+      const Hello = () => {
+        const [text, setText] = React.useState('hello malita~');
+        return <div onClick={() => setText('hi~')}>{text}</div>;
+      };
+      const root = ReactDOM.createRoot(document.getElementById('malita'));
+      root.render(React.createElement(Hello));
+    </script>
+  </body>
+</html>
