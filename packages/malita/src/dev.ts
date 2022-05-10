@@ -31,9 +31,8 @@ export const dev = async () => {
         <div id="malita">
             <span>loading...</span>
         </div>
-        <script src="/${DEFAULT_OUTDIR}/index.js">
-        <script src="/malita/client.js">
-        </script>
+        <script src="/${DEFAULT_OUTDIR}/index.js"></script>
+        <script src="/malita/client.js"></script>
     </body>
     
     </html>`);

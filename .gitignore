@@ -11,3 +11,4 @@
 .umi-test
 **/fixtures/**/dist
 /demo
+/examples/app/www
