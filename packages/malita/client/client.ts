@@ -2,7 +2,6 @@ if ("WebSocket" in window) {
   const socket = new window.WebSocket("ws://127.0.0.1:8888", "malita-hmr");
   let pingTimer: NodeJS.Timer | null = null;
   socket.addEventListener("message", async ({ data }: any) => {
-    console.log(data);
     const msg = JSON.parse(data);
 
     if (msg.type === "connected") {

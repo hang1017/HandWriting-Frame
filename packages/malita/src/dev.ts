@@ -5,6 +5,7 @@ import path from "path";
 import { createServer } from "http";
 import { DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST, DEFAULT_ENTRY_POINT } from "./constants";
 import { createWebSocketServer } from "./server";
+import { style } from "./styles";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -33,6 +34,7 @@ export const dev = async () => {
         </div>
         <script src="/${DEFAULT_OUTDIR}/index.js"></script>
         <script src="/malita/client.js"></script>
+        // <link href="/${DEFAULT_OUTDIR}/index.css" rel="stylesheet"/>
     </body>
     
     </html>`);
@@ -67,6 +69,7 @@ export const dev = async () => {
             sendMessage("reload");
           },
         },
+        plugins: [style()],
         entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINT)],
       });
     } catch (e) {
