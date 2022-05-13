@@ -21,7 +21,6 @@ export function style(): Plugin {
        * 修改 style-stub 返回的所有的内容
        */
       onLoad({ filter: /.*/, namespace: "style-stub" }, async (args) => {
-        console.log(args.path);
         return {
           contents: `
             import { injectStyle } from '__style_helper__';

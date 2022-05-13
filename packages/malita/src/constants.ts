@@ -5,3 +5,5 @@ export const DEFAULT_PLATFORM = "browser"; // platform
 export const DEFAULT_HOST = "127.0.0.1"; // host
 export const DEFAULT_PORT = 8888; // port
 export const DEFAULT_BUILD_PORT = 8989; // build port
+export const DEFAULT_TEMPLATE = ".malita";
+export const DEFAULT_GLOBAL_LAYOUTS = "layouts/index.tsx";

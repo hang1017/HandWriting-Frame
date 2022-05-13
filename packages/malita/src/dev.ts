@@ -6,6 +6,8 @@ import { createServer } from "http";
 import { DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST, DEFAULT_ENTRY_POINT } from "./constants";
 import { createWebSocketServer } from "./server";
 import { style } from "./styles";
+import { getAppData } from "./appData";
+import { getRoutes } from "./router";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -52,6 +54,11 @@ export const dev = async () => {
 
   server.listen(port, async () => {
     console.log(`demo服务器已启动，访问地址 http://${DEFAULT_HOST}:${DEFAULT_PORT}`);
+
+    const appData = await getAppData({ cwd });
+    console.log(appData);
+    const routes = await getRoutes({ appData });
+    console.log(JSON.stringify(routes));
 
     try {
       await build({
