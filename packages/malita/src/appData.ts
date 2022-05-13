@@ -25,7 +25,7 @@ export const getAppData = ({ cwd }: Options) => {
     const absNodeModulesPath = path.resolve(cwd, "node_modules");
     const absTmpPath = path.resolve(absNodeModulesPath, DEFAULT_TEMPLATE);
     const absOutputPath = path.resolve(cwd, DEFAULT_OUTDIR);
-    const absEntryPath = path.resolve(cwd, DEFAULT_ENTRY_POINT);
+    const absEntryPath = path.resolve(absTmpPath, DEFAULT_ENTRY_POINT);
 
     const paths = {
       cwd,

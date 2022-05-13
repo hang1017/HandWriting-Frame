@@ -30,9 +30,7 @@ const filesToRoutes = (files: string[], pagesPath: string) => {
   return files.map((i) => {
     let pagePath = path.basename(i, path.extname(i));
     const element = path.resolve(pagesPath, pagePath);
-    if (pagePath === "home") {
-      pagePath = "/";
-    }
+    if (pagePath === "home") pagePath = "";
     return {
       path: `/${pagePath}`,
       element,
