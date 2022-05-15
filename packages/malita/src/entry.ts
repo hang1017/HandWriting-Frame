@@ -1,7 +1,8 @@
 import { mkdir, writeFileSync } from "fs";
 import path from "path";
 import { IRoute } from "./routes";
-import { AppDataProps } from "./appData";
+import type { AppDataProps } from "./appData";
+import type { UserConfigProps } from "./config";
 
 let count = 1;
 
@@ -23,10 +24,28 @@ const getRouteStr = (routes: IRoute[]) => {
   return { importStr, routesStr };
 };
 
-export const generateEntry = ({ routes, appData }: { routes: IRoute[]; appData: AppDataProps }) => {
+const configStringify = (config: (string | RegExp)[]) => {
+  return config.map((item) => {
+    if (item instanceof RegExp) {
+      return item;
+    }
+    return `'${item}'`;
+  });
+};
+
+export const generateEntry = ({
+  routes,
+  appData,
+  userConfig,
+}: {
+  routes: IRoute[];
+  appData: AppDataProps;
+  userConfig: UserConfigProps;
+}) => {
   return new Promise((resolve, rejects) => {
     count = 0;
     const { importStr, routesStr } = getRouteStr(routes);
+
     const content = `
   import React from "react";
   import ReactDOM from "react-dom/client";
@@ -36,7 +55,7 @@ export const generateEntry = ({ routes, appData }: { routes: IRoute[]; appData: 
 
   const App = () => {
     return (
-      <KeepAliveLayout keepalive={["/./"]}>
+      <KeepAliveLayout keepalive={[${configStringify(userConfig?.keepalive || [])}]}>
         <HashRouter>
           <Routes>
             ${routesStr}

@@ -7,3 +7,4 @@ export const DEFAULT_PORT = 8888; // port
 export const DEFAULT_BUILD_PORT = 8989; // build port
 export const DEFAULT_TEMPLATE = ".malita";
 export const DEFAULT_GLOBAL_LAYOUTS = "layouts/index.tsx";
+export const DEFAULT_CONFIG_FILE = "malita.config.ts";

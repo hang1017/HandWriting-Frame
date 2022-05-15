@@ -2,8 +2,9 @@ import { mkdir, writeFileSync } from "fs";
 import path from "path";
 import { DEFAULT_OUTDIR, DEFAULT_FRAMEWORK_NAME } from "./constants";
 import { AppDataProps } from "./appData";
+import { UserConfigProps } from "./config";
 
-export const generateHtml = ({ appData }: { appData: AppDataProps }) => {
+export const generateHtml = ({ appData, userConfig }: { appData: AppDataProps; userConfig: UserConfigProps }) => {
   return new Promise((resolve, rejects) => {
     const content = `
       <!DOCTYPE html>
@@ -11,7 +12,7 @@ export const generateHtml = ({ appData }: { appData: AppDataProps }) => {
       
       <head>
           <meta charset="UTF-8">
-          <title>${appData.pkg.name ?? "Malita"}</title>
+          <title>${userConfig.title ?? appData.pkg.name ?? "Malita"}</title>
       </head>
       
       <body>
