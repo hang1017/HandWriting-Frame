@@ -4,6 +4,8 @@ import path from "path";
 import fs from "fs";
 import portfinder from "portfinder";
 import { createServer } from "http";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import type { Options as ProxyOptions } from "http-proxy-middleware";
 import { DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST } from "./constants";
 import { createWebSocketServer } from "./server";
 import { style } from "./styles";
@@ -51,6 +53,15 @@ export const dev = async () => {
     await generateEntry({ appData, routes, userConfig });
     // 生成 Html
     await generateHtml({ appData, userConfig });
+
+    if (userConfig.proxy) {
+      Object.entries(userConfig.proxy).forEach(([key, obj]: any) => {
+        const { target } = obj;
+        if (target) {
+          app.use(key, createProxyMiddleware(key, obj));
+        }
+      });
+    }
   };
 
   malitaServe.on("REBUILD", async ({ appData }: { appData: AppDataProps }) => {

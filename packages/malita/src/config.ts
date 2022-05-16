@@ -2,12 +2,14 @@ import path from "path";
 import { existsSync } from "fs";
 import { build } from "esbuild";
 import type { Server } from "http";
+import type { Options as ProxyOptions } from "http-proxy-middleware";
 import { DEFAULT_CONFIG_FILE } from "./constants";
 import type { AppDataProps } from "./appData";
 
 export interface UserConfigProps {
   title?: string;
   keepalive?: any[];
+  proxy?: Record<string, ProxyOptions>;
 }
 
 export const getUserConfig = ({ appData, malitaServe }: { appData: AppDataProps; malitaServe: Server }) => {
