@@ -4,17 +4,10 @@ import path from "path";
 import fs from "fs";
 import portfinder from "portfinder";
 import { createServer } from "http";
-import {
-  DEFAULT_ENTRY_POINT,
-  DEFAULT_OUTDIR,
-  DEFAULT_PLATFORM,
-  DEFAULT_PORT,
-  DEFAULT_HOST,
-  DEFAULT_BUILD_PORT,
-} from "./constants";
+import { DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST } from "./constants";
 import { createWebSocketServer } from "./server";
 import { style } from "./styles";
-import { getAppData } from "./appData";
+import { getAppData, AppDataProps } from "./appData";
 import { getRoutes } from "./routes";
 import { generateEntry } from "./entry";
 import { generateHtml } from "./html";
@@ -49,6 +42,22 @@ export const dev = async () => {
     ws.send(JSON.stringify({ type, data }));
   }
 
+  const buildMain = async ({ appData }: { appData: AppDataProps }) => {
+    // 获取用户配置信息
+    const userConfig = await getUserConfig({ appData, malitaServe });
+    // 获取 routes 配置
+    const routes = await getRoutes({ appData });
+    // 生成项目主入口
+    await generateEntry({ appData, routes, userConfig });
+    // 生成 Html
+    await generateHtml({ appData, userConfig });
+  };
+
+  malitaServe.on("REBUILD", async ({ appData }: { appData: AppDataProps }) => {
+    await buildMain({ appData });
+    sendMessage("reload");
+  });
+
   malitaServe.listen(port, async () => {
     console.log(`App listening at http://${DEFAULT_HOST}:${port}`);
     try {
@@ -57,14 +66,8 @@ export const dev = async () => {
       const appData = await getAppData({
         cwd,
       });
-      // 获取用户配置信息
-      const userConfig = await getUserConfig({ appData, sendMessage });
-      // 获取 routes 配置
-      const routes = await getRoutes({ appData });
-      // 生成项目主入口
-      await generateEntry({ appData, routes, userConfig });
-      // 生成 Html
-      await generateHtml({ appData, userConfig });
+
+      await buildMain({ appData });
 
       // 执行构建
       await build({
