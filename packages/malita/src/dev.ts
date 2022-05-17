@@ -5,7 +5,6 @@ import fs from "fs";
 import portfinder from "portfinder";
 import { createServer } from "http";
 import { createProxyMiddleware } from "http-proxy-middleware";
-import type { Options as ProxyOptions } from "http-proxy-middleware";
 import { DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST } from "./constants";
 import { createWebSocketServer } from "./server";
 import { style } from "./styles";
@@ -14,6 +13,7 @@ import { getRoutes } from "./routes";
 import { generateEntry } from "./entry";
 import { generateHtml } from "./html";
 import { getUserConfig } from "./config";
+import { getMockConfig } from "./mock";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -47,6 +47,24 @@ export const dev = async () => {
   const buildMain = async ({ appData }: { appData: AppDataProps }) => {
     // 获取用户配置信息
     const userConfig = await getUserConfig({ appData, malitaServe });
+
+    const mockConfig = await getMockConfig({ appData, malitaServe });
+
+    app.use((req, res, next) => {
+      const result = mockConfig?.[req.method]?.[req.url];
+      if (
+        Object.prototype.toString.call(result) === "[object String]" ||
+        Object.prototype.toString.call(result) === "[object Array]" ||
+        Object.prototype.toString.call(result) === "[object Object]"
+      ) {
+        res.json(result);
+      } else if (Object.prototype.toString.call(result) === "[object Function]") {
+        result(req, res);
+      } else {
+        next();
+      }
+    });
+
     // 获取 routes 配置
     const routes = await getRoutes({ appData });
     // 生成项目主入口
