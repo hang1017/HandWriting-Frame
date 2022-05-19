@@ -16,6 +16,7 @@ importers:
       '@malitajs/keepalive': workspace:*
       '@types/react-dom': ^18.0.2
       antd-mobile: ^5.12.4
+      antd-mobile-icons: ^0.2.2
       lorem-ipsum: ^2.0.4
       malita: workspace:*
       react: ^18.0.0
@@ -27,6 +28,7 @@ importers:
       '@alita/flow': 3.0.0-beta.5
       '@malitajs/keepalive': link:../../packages/keepalive
       antd-mobile: 5.12.4_react-dom@18.0.0+react@18.0.0
+      antd-mobile-icons: 0.2.2
       lorem-ipsum: 2.0.4
       malita: link:../../packages/malita
       react: 18.0.0
