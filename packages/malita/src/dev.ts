@@ -1,4 +1,4 @@
-import express from "express";
+import express from "../compiled/express";
 import { build } from "esbuild";
 import path from "path";
 import fs from "fs";
@@ -24,7 +24,7 @@ export const dev = async () => {
 
   const output = path.resolve(cwd, DEFAULT_OUTDIR);
 
-  app.get("/", (_req, res, next) => {
+  app.get("/", (_req: any, res: any, next: any) => {
     res.set("Content-Type", "text/html");
     const htmlPath = path.join(output, "index.html");
     if (fs.existsSync(htmlPath)) {
@@ -50,7 +50,7 @@ export const dev = async () => {
 
     const mockConfig = await getMockConfig({ appData, malitaServe });
 
-    app.use((req, res, next) => {
+    app.use((req: any, res: any, next: () => void) => {
       const result = mockConfig?.[req.method]?.[req.url];
       if (
         Object.prototype.toString.call(result) === "[object String]" ||
