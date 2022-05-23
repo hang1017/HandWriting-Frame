@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm esbuild src/** --bundle --outdir=www",
+    "build": "malita build",
     "dev": "malita dev",
-    "serve": "cd ./www && serve",
+    "serve": "cd dist && serve",
     "start": "malita",
-    "mbuild": "malita build"
+    "g": "malita g"
   },
   "dependencies": {
     "@alita/flow": "^3.0.0-beta.5",
