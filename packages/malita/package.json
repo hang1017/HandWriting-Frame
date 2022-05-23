@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "hello": "node scripts/node.js",
-    "build": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild",
+    "build": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild --loader:.node=file",
     "build:client": "pnpm esbuild ./client/** --bundle --outdir=lib/client --external:esbuild",
     "build:deps": "pnpm esno ../../scripts/bundleDeps.ts",
     "dev": "pnpm build -- --watch"
@@ -27,6 +27,7 @@
     "portfinder": "^1.0.28",
     "postcss": "^8.4.13",
     "resolve": "^1.22.0",
+    "@umijs/utils": "4.0.0-rc.15",
     "ws": "^8.6.0"
   },
   "devDependencies": {
