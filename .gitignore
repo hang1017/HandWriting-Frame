@@ -1,16 +1,9 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
 /node_modules
-/packages/*/lib
-/packages/*/dist
-/packages/*/node_modules
-/examples/*/node_modules
-/coverage
-/.nyc_output
-/.changelog
-.DS_Store
-.umi
-.umi-production
-.umi-test
-**/fixtures/**/dist
-/demo
-/examples/app/www
-/examples/app/dist
+/npm-debug.log*
+/yarn-error.log
+/yarn.lock
+/package-lock.json
+

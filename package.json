@@ -1,19 +1,25 @@
 {
-  "private": true,
+  "name": "malita",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "pnpm -r --filter ./packages run build",
-    "build:client": "cd packages && cd malita && pnpm run build:client",
-    "build:deps": "cd packages && cd malita && pnpm run build:deps",
-    "dev": "pnpm -r --filter ./packages --parallel run dev"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "@types/minimist": "^1.2.2",
-    "@vercel/ncc": "^0.33.4",
-    "dts-packer": "^0.0.3",
-    "esbuild": "^0.14.38",
-    "esno": "^0.16.3",
-    "fs-extra": "^10.1.0",
-    "minimist": "^1.2.6",
-    "typescript": "^4.6.3"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
+  },
+  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
+  "dependencies": {
+    "babel-standalone": "^6.26.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   }
 }
