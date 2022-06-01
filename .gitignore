@@ -7,3 +7,10 @@
 /yarn.lock
 /package-lock.json
 
+/packages/**/package-lock.json
+/examples/**/package-lock.json
+
+/examples/**/node_modules
+/packages/**/node_modules
+
+
