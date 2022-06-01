@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-const { program } = require("commander");
+const { Command } = require("commander");
+const program = new Command();
 console.log("hello alita");
 
 program
   .version(require("../package.json").version, "-v, -V", "输出当前版本")
   .description("这是21天短文，挑战手写前端框架的产物框架")
-  .usage("<command> [options]")
-  .parse(process.argv);
+  .usage("<command> [options]");
 
 program
   .command("help")
@@ -23,5 +23,14 @@ program
 
 Example call:
     $ malita <command> --help`);
-  })
-  .parse(process.argv);
+  });
+
+program
+  .command("dev")
+  .description("启动服务")
+  .action(function () {
+    const { dev } = require("../lib/dev");
+    dev();
+  });
+
+program.parse(process.argv);
