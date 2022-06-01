@@ -6,12 +6,21 @@
   "scripts": {
     "start": "malita",
     "hp": "malita help",
+    "build": "pnpm esbuild src/** --bundle --outdir=www",
+    "serve": "cd www && serve",
     "vs": "malita -v"
   },
   "dependencies": {
-    "malita": "workspace:*"
+    "malita": "workspace:*",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "serve": "^13.0.2"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.0.10",
+    "@types/react-dom": "^18.0.5"
+  }
 }

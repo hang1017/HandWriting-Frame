@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "hello": "node ./src/index.js"
+    "hello": "node ./src/index.js",
+    "build": "pnpm esbuild src/** --bundle --outdir=lib"
   },
   "bin": {
     "malita": "./bin/malita.js"
@@ -22,8 +23,6 @@
   "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
   "dependencies": {
     "babel-standalone": "^6.26.0",
-    "commander": "^9.3.0",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "commander": "^9.3.0"
   }
 }

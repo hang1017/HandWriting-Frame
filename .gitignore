@@ -13,4 +13,8 @@
 /examples/**/node_modules
 /packages/**/node_modules
 
+/packages/**/lib
+/examples/**/lib
+
+# /examples/**/www
 
