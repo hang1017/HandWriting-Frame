@@ -16,5 +16,5 @@
 /packages/**/lib
 /examples/**/lib
 
-# /examples/**/www
+/examples/**/www
 
