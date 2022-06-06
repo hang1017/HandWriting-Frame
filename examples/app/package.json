@@ -12,9 +12,12 @@
     "vs": "malita -v"
   },
   "dependencies": {
+    "@alita/flow": "^3.0.0-beta.5",
     "malita": "workspace:*",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
     "serve": "^13.0.2"
   },
   "keywords": [],
