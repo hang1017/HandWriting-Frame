@@ -13,6 +13,7 @@ importers:
   examples/app:
     specifiers:
       '@alita/flow': ^3.0.0-beta.5
+      '@malitajs/keepalive': workspace:*
       '@types/react': ^18.0.10
       '@types/react-dom': ^18.0.5
       malita: workspace:*
@@ -23,12 +24,30 @@ importers:
       serve: ^13.0.2
     dependencies:
       '@alita/flow': 3.0.0-beta.5
+      '@malitajs/keepalive': link:../../packages/keepalive
       malita: link:../../packages/malita
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
       react-router: 6.3.0_react@18.1.0
       react-router-dom: 6.3.0_react-dom@18.1.0+react@18.1.0
       serve: 13.0.2
+    devDependencies:
+      '@types/react': 18.0.10
+      '@types/react-dom': 18.0.5
+
+  packages/keepalive:
+    specifiers:
+      '@types/react': ^18.0.10
+      '@types/react-dom': ^18.0.5
+      react: ^18.1.0
+      react-dom: ^18.1.0
+      react-router: ^6.3.0
+      react-router-dom: ^6.3.0
+    dependencies:
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
+      react-router: 6.3.0_react@18.1.0
+      react-router-dom: 6.3.0_react-dom@18.1.0+react@18.1.0
     devDependencies:
       '@types/react': 18.0.10
       '@types/react-dom': 18.0.5
