@@ -5,6 +5,7 @@ import { createServer } from "http";
 import portfinder from "portfinder";
 import { createWebSocketServer } from "./server";
 import { DEFAULT_PORT, DEFAULT_HOST, DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_ENTRY_POINT } from "./constants";
+import { styles } from "./styles";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -67,6 +68,7 @@ export const dev = async () => {
             sendMessage("reload");
           },
         },
+        plugins: [styles()],
         external: ["esbuild"],
         entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINT)],
       });
