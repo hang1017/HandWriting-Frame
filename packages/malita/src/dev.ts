@@ -6,6 +6,9 @@ import portfinder from "portfinder";
 import { createWebSocketServer } from "./server";
 import { DEFAULT_PORT, DEFAULT_HOST, DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_ENTRY_POINT } from "./constants";
 import { styles } from "./styles";
+import { getAppData } from "./appData";
+import { getRoutes } from "./routes";
+import { generateEntry } from "./entry";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -49,10 +52,14 @@ export const dev = async () => {
   malitaServer.listen(port, async () => {
     console.log(`App listening at http://${DEFAULT_HOST}:${DEFAULT_PORT}`);
 
+    const appData = await getAppData({ cwd });
+    const routers = await getRoutes({ appData });
+    await generateEntry({ appData, routers });
+
     try {
       await build({
         bundle: true,
-        outdir: DEFAULT_OUTDIR,
+        outdir: appData.paths.absOutputPath,
         platform: DEFAULT_PLATFORM,
         logLevel: "error",
         format: "iife",
@@ -71,6 +78,7 @@ export const dev = async () => {
         plugins: [styles()],
         external: ["esbuild"],
         entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINT)],
+        // entryPoints: [appData.paths.absEntryPath],
       });
     } catch (e) {
       process.exit(1);

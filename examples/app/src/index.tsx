@@ -4,7 +4,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import KeepAliveLayout from "@malitajs/keepalive";
 
 import Layout from "./layouts/index";
-import Hello from "./pages/home";
+import Hello from "./pages/index";
 import Users from "./pages/users";
 import Me from "./pages/me";
 
