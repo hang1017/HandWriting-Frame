@@ -11,6 +11,7 @@ import { getAppData } from "./appData";
 import { getRoutes } from "./routes";
 import { generateEntry } from "./entry";
 import { generateHtml } from "./html";
+import { getUserConfig } from "./config";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -45,8 +46,9 @@ export const dev = async () => {
 
     const appData = await getAppData({ cwd });
     const routers = await getRoutes({ appData });
-    await generateEntry({ appData, routers });
-    await generateHtml({ appData });
+    const userConfig = await getUserConfig({ appData, sendMessage });
+    await generateEntry({ appData, routers, userConfig });
+    await generateHtml({ appData, userConfig });
 
     try {
       await build({
