@@ -16,7 +16,7 @@ export const generateHtml = async ({ appData }: { appData: AppDataProps }) => {
     <body>
         <div id="malita">
             <span>loading...</span>
-            <script src='/${DEFAULT_OUTDIR}/index.js'></script>
+            <script src='/${DEFAULT_OUTDIR}/${DEFAULT_FRAMEWORK_NAME}.js'></script>
             <script src='/malita/client.js'></script>
         </div>
     </body>
