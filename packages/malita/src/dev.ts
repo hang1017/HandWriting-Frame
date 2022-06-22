@@ -1,14 +1,16 @@
 import express from "express";
 import { build } from "esbuild";
 import path from "path";
+import fs from "fs";
 import { createServer } from "http";
 import portfinder from "portfinder";
 import { createWebSocketServer } from "./server";
-import { DEFAULT_PORT, DEFAULT_HOST, DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_ENTRY_POINT } from "./constants";
+import { DEFAULT_PORT, DEFAULT_HOST, DEFAULT_OUTDIR, DEFAULT_PLATFORM } from "./constants";
 import { styles } from "./styles";
 import { getAppData } from "./appData";
 import { getRoutes } from "./routes";
 import { generateEntry } from "./entry";
+import { generateHtml } from "./html";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -17,32 +19,21 @@ export const dev = async () => {
   const port = await portfinder.getPortPromise({
     port: DEFAULT_PORT,
   });
-  app.get("/", (_req, res) => {
+  const output = path.resolve(cwd, DEFAULT_OUTDIR);
+  app.get("/", (_req, res, next) => {
     res.set("Content-Type", "text/html");
-    res.send(`<!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <title>Malita</title>
-    </head>
-    
-    <body>
-        <div id="malita">
-            <span>loading...</span>
-            <script src='/${DEFAULT_OUTDIR}/index.js'></script>
-            <script src='/malita/client.js'></script>
-        </div>
-    </body>
-    </html>
-  `);
+    const htmlPath = path.join(output, "index.html");
+    if (fs.existsSync(htmlPath)) {
+      fs.createReadStream(htmlPath).on("error", next).pipe(res);
+    } else {
+      next();
+    }
   });
 
   const malitaServer = createServer(app);
   const ws = createWebSocketServer(malitaServer);
 
-  const esbuildOutput = path.resolve(cwd, DEFAULT_OUTDIR);
-  app.use(`/${DEFAULT_OUTDIR}`, express.static(esbuildOutput));
+  app.use(`/${DEFAULT_OUTDIR}`, express.static(output));
   app.use(`/malita`, express.static(path.resolve(__dirname, "client")));
 
   const sendMessage = (type: string, data?: any) => {
@@ -55,6 +46,7 @@ export const dev = async () => {
     const appData = await getAppData({ cwd });
     const routers = await getRoutes({ appData });
     await generateEntry({ appData, routers });
+    await generateHtml({ appData });
 
     try {
       await build({
@@ -77,8 +69,7 @@ export const dev = async () => {
         },
         plugins: [styles()],
         external: ["esbuild"],
-        entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINT)],
-        // entryPoints: [appData.paths.absEntryPath],
+        entryPoints: [appData.paths.absEntryPath],
       });
     } catch (e) {
       process.exit(1);

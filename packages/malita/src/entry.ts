@@ -1,3 +1,5 @@
+import { mkdir, writeFileSync } from "fs";
+import path from "path";
 import { AppDataProps } from "./appData";
 import { RouteProps } from "./routes";
 
@@ -7,7 +9,7 @@ const getRouteStr = (routers: RouteProps[]) => {
 
   let i = 1;
   routers.map((item) => {
-    importStr += `import A${i} from ${item.element};\n`;
+    importStr += `import A${i} from '${item.element}';\n`;
     routesStr += `<Route path="${item.path}" element={<A${i} />}>\n`;
     if (item.routes) {
       const { routesStr: rs, importStr: is } = getRouteStr(item.routes);
@@ -21,9 +23,8 @@ const getRouteStr = (routers: RouteProps[]) => {
 };
 
 export const generateEntry = async ({ appData, routers }: { appData: AppDataProps; routers: RouteProps[] }) => {
-  return new Promise((resolve: any) => {
+  return new Promise((resolve: any, rejects: any) => {
     const { importStr, routesStr } = getRouteStr(routers);
-    console.log(importStr, routesStr);
 
     const content = `import React from "react";
     import ReactDOM from "react-dom/client";
@@ -49,5 +50,16 @@ export const generateEntry = async ({ appData, routers }: { appData: AppDataProp
     root.render(React.createElement(App));
     `;
     resolve([]);
+
+    try {
+      mkdir(path.dirname(appData.paths.absEntryPath), { recursive: true }, (err) => {
+        if (err) rejects(err);
+
+        writeFileSync(appData.paths.absEntryPath, content, "utf-8");
+        resolve({});
+      });
+    } catch (err) {
+      rejects(err);
+    }
   });
 };
