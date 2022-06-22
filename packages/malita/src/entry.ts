@@ -3,12 +3,14 @@ import path from "path";
 import { AppDataProps } from "./appData";
 import { RouteProps } from "./routes";
 
+let i = 1;
+
 const getRouteStr = (routers: RouteProps[]) => {
   let routesStr = "";
   let importStr = "";
 
-  let i = 1;
   routers.map((item) => {
+    i += 1;
     importStr += `import A${i} from '${item.element}';\n`;
     routesStr += `<Route path="${item.path}" element={<A${i} />}>\n`;
     if (item.routes) {
@@ -16,7 +18,6 @@ const getRouteStr = (routers: RouteProps[]) => {
       importStr += is;
       routesStr += rs;
     }
-    i++;
     routesStr += "</Route>\n";
   });
   return { routesStr, importStr };
