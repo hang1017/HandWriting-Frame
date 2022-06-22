@@ -7,7 +7,7 @@ import portfinder from "portfinder";
 import { createWebSocketServer } from "./server";
 import { DEFAULT_PORT, DEFAULT_HOST, DEFAULT_OUTDIR, DEFAULT_PLATFORM } from "./constants";
 import { styles } from "./styles";
-import { getAppData } from "./appData";
+import { getAppData, AppDataProps } from "./appData";
 import { getRoutes } from "./routes";
 import { generateEntry } from "./entry";
 import { generateHtml } from "./html";
@@ -40,15 +40,23 @@ export const dev = async () => {
   const sendMessage = (type: string, data?: any) => {
     ws.send(JSON.stringify({ type, data }));
   };
+  const buildMain = async ({ appData }: { appData: AppDataProps }) => {
+    const routers = await getRoutes({ appData });
+    const userConfig = await getUserConfig({ appData, sendMessage, malitaServer });
+    await generateEntry({ appData, routers, userConfig });
+    await generateHtml({ appData, userConfig });
+  };
+  malitaServer.on("REBUILD", async ({ appData }: { appData: AppDataProps }) => {
+    await buildMain({ appData });
+    sendMessage("reload");
+  });
 
   malitaServer.listen(port, async () => {
     console.log(`App listening at http://${DEFAULT_HOST}:${DEFAULT_PORT}`);
 
     const appData = await getAppData({ cwd });
-    const routers = await getRoutes({ appData });
-    const userConfig = await getUserConfig({ appData, sendMessage });
-    await generateEntry({ appData, routers, userConfig });
-    await generateHtml({ appData, userConfig });
+
+    await buildMain({ appData });
 
     try {
       await build({

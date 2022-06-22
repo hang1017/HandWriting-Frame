@@ -1,6 +1,7 @@
 import { AppDataProps } from "./appData";
 import path from "path";
 import { build } from "esbuild";
+import { Server } from "http";
 import { DEFAULT_CONFIG_FILE, DEFAULT_PLATFORM } from "./constants";
 
 export interface UserConfigProps {
@@ -11,9 +12,11 @@ export interface UserConfigProps {
 export const getUserConfig = async ({
   appData,
   sendMessage,
+  malitaServer,
 }: {
   appData: AppDataProps;
   sendMessage: (type: string, data?: any) => void;
+  malitaServer: Server;
 }) => {
   return new Promise(async (resolve: (res: UserConfigProps) => void) => {
     let config = {} as UserConfigProps;
@@ -30,7 +33,9 @@ export const getUserConfig = async ({
             console.log(res);
             return;
           }
-          sendMessage("reload");
+          console.log("malitaServer: REBUILD");
+
+          malitaServer.emit("REBUILD", { appData });
         },
       },
       external: ["esbuild"],
@@ -38,7 +43,9 @@ export const getUserConfig = async ({
     });
 
     try {
-      config = require(path.resolve(appData.paths.absOutputPath, "malita.config.js")).default;
+      const cfile = path.resolve(appData.paths.absOutputPath, "malita.config.js");
+      delete require.cache[cfile];
+      config = require(cfile).default;
       resolve(config);
     } catch (e) {}
   });
