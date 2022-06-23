@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { createServer } from "http";
 import portfinder from "portfinder";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import { createWebSocketServer } from "./server";
 import { DEFAULT_PORT, DEFAULT_HOST, DEFAULT_OUTDIR, DEFAULT_PLATFORM } from "./constants";
 import { styles } from "./styles";
@@ -12,6 +13,7 @@ import { getRoutes } from "./routes";
 import { generateEntry } from "./entry";
 import { generateHtml } from "./html";
 import { getUserConfig } from "./config";
+import { getMockConfig } from "./mock";
 
 export const dev = async () => {
   const cwd = process.cwd();
@@ -43,8 +45,33 @@ export const dev = async () => {
   const buildMain = async ({ appData }: { appData: AppDataProps }) => {
     const routers = await getRoutes({ appData });
     const userConfig = await getUserConfig({ appData, sendMessage, malitaServer });
+    const { proxy } = userConfig;
     await generateEntry({ appData, routers, userConfig });
     await generateHtml({ appData, userConfig });
+    const mock = await getMockConfig({ appData, malitaServer });
+
+    if (mock) {
+      app.use((req, res, next) => {
+        const result = mock?.[req.method]?.[req.url];
+        if (
+          Object.prototype.toString.call(result) === "[object String]" ||
+          Object.prototype.toString.call(result) === "[object Array]" ||
+          Object.prototype.toString.call(result) === "[object Object]"
+        ) {
+          res.json(result);
+        } else if (Object.prototype.toString.call(result) === "[object Function]") {
+          result(req, res);
+        } else {
+          next();
+        }
+      });
+    }
+
+    if (proxy) {
+      Object.entries(proxy).forEach(([key, obj]) => {
+        app.use(key, createProxyMiddleware(obj));
+      });
+    }
   };
   malitaServer.on("REBUILD", async ({ appData }: { appData: AppDataProps }) => {
     await buildMain({ appData });

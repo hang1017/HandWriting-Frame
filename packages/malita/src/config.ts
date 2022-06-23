@@ -2,11 +2,13 @@ import { AppDataProps } from "./appData";
 import path from "path";
 import { build } from "esbuild";
 import { Server } from "http";
+import { Options } from "http-proxy-middleware";
 import { DEFAULT_CONFIG_FILE, DEFAULT_PLATFORM } from "./constants";
 
 export interface UserConfigProps {
   title?: string;
   keepalive?: (string | RegExp)[];
+  proxy: Options[];
 }
 
 export const getUserConfig = async ({
