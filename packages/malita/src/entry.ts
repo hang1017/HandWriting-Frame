@@ -49,6 +49,7 @@ export const generateEntry = async ({
     import ReactDOM from "react-dom/client";
     import { HashRouter, Routes, Route } from "react-router-dom";
     import KeepAliveLayout from "@malitajs/keepalive";
+    import '${path.resolve(__dirname, "hd")}';
     
     ${importStr}
     
