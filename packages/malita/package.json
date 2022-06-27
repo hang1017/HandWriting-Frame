@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "hello": "node ./src/index.js",
-    "build": "pnpm esbuild src/** --bundle --outdir=lib --platform=node --external:esbuild"
+    "build": "pnpm esbuild src/** --bundle --outdir=lib --platform=node --external:esbuild",
+    "deps": "pnpm esno ../../scripts/bundleDeps.ts"
   },
   "bin": {
     "malita": "./bin/malita.js"

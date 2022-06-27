@@ -5,7 +5,14 @@
     "build:client": "cd packages/malita && pnpm esbuild ./client/** --bundle --outdir=lib/client --external:esbuild"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@vercel/ncc": "^0.34.0",
+    "dts-packer": "^0.0.3",
     "esbuild": "^0.14.42",
+    "esno": "^0.16.3",
+    "fs-extra": "^10.1.0",
+    "minimist": "^1.2.6",
+    "resolve": "^1.22.1",
     "typescript": "^4.7.2"
   }
 }
