@@ -10,7 +10,7 @@ export const generate = (args: string[]) => {
   const absPagePath = path.join(absSrcPath, "pages");
   if (existsSync(absPagePath) && type && name) {
     generateFile({
-      path: path.join(__dirname, "../templates/page"),
+      path: path.join(__dirname, `../templates/${type}`),
       target: path.join(absPagePath, name),
     });
   }

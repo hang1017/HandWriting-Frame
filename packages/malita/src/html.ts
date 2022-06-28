@@ -4,7 +4,15 @@ import { DEFAULT_OUTDIR, DEFAULT_FRAMEWORK_NAME } from "./constants";
 import { AppDataProps } from "./appData";
 import { UserConfigProps } from "./config";
 
-export const generateHtml = async ({ appData, userConfig }: { appData: AppDataProps; userConfig: UserConfigProps }) => {
+export const generateHtml = async ({
+  appData,
+  userConfig,
+  isProduction = true,
+}: {
+  appData: AppDataProps;
+  userConfig: UserConfigProps;
+  isProduction: boolean;
+}) => {
   return new Promise((resolve, rejects) => {
     const content = `<!DOCTYPE html>
     <html lang="en">
@@ -17,8 +25,8 @@ export const generateHtml = async ({ appData, userConfig }: { appData: AppDataPr
     <body>
         <div id="malita">
             <span>loading...</span>
-            <script src='/${DEFAULT_OUTDIR}/${DEFAULT_FRAMEWORK_NAME}.js'></script>
-            <script src='/malita/client.js'></script>
+            <script src='${isProduction ? `.` : `/${DEFAULT_OUTDIR}/${DEFAULT_FRAMEWORK_NAME}.js`}'></script>
+            ${isProduction ? "" : '<script src="/malita/client.js"></script>'}
         </div>
     </body>
     </html>`;

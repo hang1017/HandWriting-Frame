@@ -6,7 +6,7 @@
   "scripts": {
     "start": "malita",
     "hp": "malita help",
-    "build": "pnpm esbuild src/** --bundle --outdir=www",
+    "build": "malita build",
     "serve": "cd www && serve",
     "dev": "malita dev",
     "vs": "malita -v"

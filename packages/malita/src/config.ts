@@ -13,12 +13,12 @@ export interface UserConfigProps {
 
 export const getUserConfig = async ({
   appData,
-  sendMessage,
   malitaServer,
+  isProduction = false,
 }: {
   appData: AppDataProps;
-  sendMessage: (type: string, data?: any) => void;
-  malitaServer: Server;
+  malitaServer?: Server;
+  isProduction: boolean;
 }) => {
   return new Promise(async (resolve: (res: UserConfigProps) => void) => {
     let config = {} as UserConfigProps;
@@ -29,17 +29,18 @@ export const getUserConfig = async ({
       logLevel: "error",
       format: "cjs",
       outdir: appData.paths.absOutputPath,
-      watch: {
-        onRebuild: (err, res) => {
-          if (err) {
-            console.log(res);
-            return;
-          }
-          console.log("malitaServer: REBUILD");
-
-          malitaServer.emit("REBUILD", { appData });
-        },
-      },
+      watch: isProduction
+        ? false
+        : {
+            onRebuild: (err, res) => {
+              if (err) {
+                console.log(res);
+                return;
+              }
+              console.log("malitaServer: REBUILD");
+              if (malitaServer) malitaServer.emit("REBUILD", { appData });
+            },
+          },
       external: ["esbuild"],
       entryPoints: [configPath],
     });

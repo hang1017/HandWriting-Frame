@@ -42,4 +42,12 @@ program
     generate(options.args);
   });
 
+program
+  .command("build")
+  .description("打包")
+  .action(function (_, options) {
+    const { build } = require("../lib/build");
+    build();
+  });
+
 program.parse(process.argv);
