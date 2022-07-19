@@ -1,20 +1,60 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <div id="malita">loading</div>
-    <script>
-      // const root = document.getElementById('malita');
-      // root.innerHTML = '<div>click me</div>';
-      // root.addEventListener('click', (e) => {
-      //   e.target.innerHTML = '<div>hi! malita</div>';
-      // })
-        function Model () {}
-        function Controller () {}
-        function View () {}
+    <body>
 
-        const model = new Model();
-        const controller = new Controller(model);
-        const view = new View(controller);
-    </script>
-  </body>
+        <script src="./node_modules/react/umd/react.production.min.js"></script>
+        <script src="./node_modules/react-dom/umd/react-dom.production.min.js"></script>
+        <script src="./node_modules/@babel/standalone/babel.min.js"></script>
+
+        <div id="malitaId">
+            <div>loading...</div>
+        </div>
+        <!-- <script>
+            const root = document.getElementById('malitaId');
+            root.innerHTML = '<div>Hi~, click me</div>';
+            root.onclick = (e) => {
+                e.target.innerHTML = '<div>Malita</div>';
+            }
+        </script> -->
+
+        <script type="text/babel">
+            const Hello = () => {
+                const [text, setText] = React.useState('Hi~, click me');
+                return <div onClick={() => setText('Malita')}>{text}</div>;
+            }
+            const root = ReactDOM.createRoot(document.getElementById('malitaId'));
+            root.render(React.createElement(Hello));
+        </script>
+
+        <!-- <script>
+            function Model() {
+                const self = this;
+                self.text = 'Hi~, click me';
+                self.setText = (e) => self.text = e;
+            }
+
+            function Controller(model) {
+                const self = this;
+                self.model = model;
+                self.onclick = (e) => {
+                    self.model.setText('malita');
+                    e.target.innerHTML = `<div>${self.model.text}</div>`;
+                }
+            }
+
+            function View(controller) {
+                const self = this;
+                self.render = () => {
+                    const root = document.getElementById('malitaId');
+                    root.innerHTML = `<div>${controller.model.text}</div>`;
+                    root.onclick = controller.onclick;
+                }
+            }
+
+            const model = new Model();
+            const controller = new Controller(model);
+            const view = new View(controller);
+            view.render();
+        </script> -->
+    </body>
 </html>
