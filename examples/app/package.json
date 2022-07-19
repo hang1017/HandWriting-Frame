@@ -1,0 +1,34 @@
+{
+  "name": "@examples/app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "aa": "malita",
+    "mv": "malita -v",
+    "mh": "malita help",
+    "build": "esbuild ./src/** --bundle --outdir=www",
+    "serve": "cd www && serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
+  },
+  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
+  "dependencies": {
+    "@babel/standalone": "^7.18.9",
+    "malita": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "serve": "^14.0.1"
+  },
+  "description": "",
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6"
+  }
+}

@@ -2,13 +2,15 @@
 <html>
     <body>
 
-        <script src="./node_modules/react/umd/react.production.min.js"></script>
+        <!-- <script src="./node_modules/react/umd/react.production.min.js"></script>
         <script src="./node_modules/react-dom/umd/react-dom.production.min.js"></script>
-        <script src="./node_modules/@babel/standalone/babel.min.js"></script>
+        <script src="./node_modules/@babel/standalone/babel.min.js"></script> -->
 
-        <div id="malitaId">
+        <div id="root">
             <div>loading...</div>
         </div>
+
+        <script src="./index.js"></script>
         <!-- <script>
             const root = document.getElementById('malitaId');
             root.innerHTML = '<div>Hi~, click me</div>';
@@ -17,14 +19,14 @@
             }
         </script> -->
 
-        <script type="text/babel">
+        <!-- <script type="text/babel">
             const Hello = () => {
                 const [text, setText] = React.useState('Hi~, click me');
                 return <div onClick={() => setText('Malita')}>{text}</div>;
             }
             const root = ReactDOM.createRoot(document.getElementById('malitaId'));
             root.render(React.createElement(Hello));
-        </script>
+        </script> -->
 
         <!-- <script>
             function Model() {
