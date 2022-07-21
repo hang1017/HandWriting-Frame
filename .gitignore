@@ -2,3 +2,9 @@
 
 /packages/**/node_modules
 /examples/**/node_modules
+
+/packages/**/dist
+/examples/**/dist
+
+/packages/**/www
+/examples/**/www
