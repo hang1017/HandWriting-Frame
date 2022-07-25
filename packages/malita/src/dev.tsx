@@ -1,6 +1,9 @@
 import express from "express";
 import { build } from "esbuild";
 import path from "path";
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
+import { createWsServer } from "./server";
 import {
   DEFAULT_OUTPUT,
   DEFAULT_POST,
@@ -11,6 +14,8 @@ import {
 export const dev = async () => {
   const app = express();
   const cwd = process.cwd();
+  const server = createServer(app);
+  const { wss, send } = createWsServer(server);
   const output = path.resolve(cwd, DEFAULT_OUTPUT);
 
   app.get("/", function (_req, res) {
@@ -21,16 +26,23 @@ export const dev = async () => {
               <div id="root">
                   <div>loading...</div>
               </div>
-      
               <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/malita/index.js"></script>
+              <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/client/index.js"></script>
           </body>
       </html>
     `);
   });
 
-  app.use("/malita", express.static(output));
+  console.log("__dirname: ", __dirname);
 
-  app.listen(DEFAULT_POST, async () => {
+  app.use("/malita", express.static(output));
+  app.use("/client", express.static(path.resolve(__dirname, "client")));
+
+  const sendMessage = (text: string) => {
+    send(JSON.stringify(text));
+  };
+
+  server.listen(DEFAULT_POST, async () => {
     await build({
       bundle: true,
       outdir: DEFAULT_OUTPUT,
@@ -38,6 +50,15 @@ export const dev = async () => {
       external: ["esbuild"],
       define: {
         "process.env.NODE_ENV": JSON.stringify("development"),
+      },
+      watch: {
+        onRebuild: (error) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          sendMessage("reload");
+        },
       },
       entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINTS)],
     });
