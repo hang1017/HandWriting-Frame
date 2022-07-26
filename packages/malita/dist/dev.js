@@ -23369,7 +23369,7 @@ var require_websocket = __commonJS({
     var protocolVersions = [8, 13];
     var readyStates = ["CONNECTING", "OPEN", "CLOSING", "CLOSED"];
     var subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
-    var WebSocket3 = class extends EventEmitter {
+    var WebSocket2 = class extends EventEmitter {
       constructor(address, protocols, options) {
         super();
         this._binaryType = BINARY_TYPES[0];
@@ -23381,7 +23381,7 @@ var require_websocket = __commonJS({
         this._extensions = {};
         this._paused = false;
         this._protocol = "";
-        this._readyState = WebSocket3.CONNECTING;
+        this._readyState = WebSocket2.CONNECTING;
         this._receiver = null;
         this._sender = null;
         this._socket = null;
@@ -23473,12 +23473,12 @@ var require_websocket = __commonJS({
         socket.on("data", socketOnData);
         socket.on("end", socketOnEnd);
         socket.on("error", socketOnError);
-        this._readyState = WebSocket3.OPEN;
+        this._readyState = WebSocket2.OPEN;
         this.emit("open");
       }
       emitClose() {
         if (!this._socket) {
-          this._readyState = WebSocket3.CLOSED;
+          this._readyState = WebSocket2.CLOSED;
           this.emit("close", this._closeCode, this._closeMessage);
           return;
         }
@@ -23486,23 +23486,23 @@ var require_websocket = __commonJS({
           this._extensions[PerMessageDeflate.extensionName].cleanup();
         }
         this._receiver.removeAllListeners();
-        this._readyState = WebSocket3.CLOSED;
+        this._readyState = WebSocket2.CLOSED;
         this.emit("close", this._closeCode, this._closeMessage);
       }
       close(code, data) {
-        if (this.readyState === WebSocket3.CLOSED)
+        if (this.readyState === WebSocket2.CLOSED)
           return;
-        if (this.readyState === WebSocket3.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           const msg = "WebSocket was closed before the connection was established";
           return abortHandshake(this, this._req, msg);
         }
-        if (this.readyState === WebSocket3.CLOSING) {
+        if (this.readyState === WebSocket2.CLOSING) {
           if (this._closeFrameSent && (this._closeFrameReceived || this._receiver._writableState.errorEmitted)) {
             this._socket.end();
           }
           return;
         }
-        this._readyState = WebSocket3.CLOSING;
+        this._readyState = WebSocket2.CLOSING;
         this._sender.close(code, data, !this._isServer, (err) => {
           if (err)
             return;
@@ -23514,14 +23514,14 @@ var require_websocket = __commonJS({
         this._closeTimer = setTimeout(this._socket.destroy.bind(this._socket), closeTimeout);
       }
       pause() {
-        if (this.readyState === WebSocket3.CONNECTING || this.readyState === WebSocket3.CLOSED) {
+        if (this.readyState === WebSocket2.CONNECTING || this.readyState === WebSocket2.CLOSED) {
           return;
         }
         this._paused = true;
         this._socket.pause();
       }
       ping(data, mask, cb) {
-        if (this.readyState === WebSocket3.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof data === "function") {
@@ -23533,7 +23533,7 @@ var require_websocket = __commonJS({
         }
         if (typeof data === "number")
           data = data.toString();
-        if (this.readyState !== WebSocket3.OPEN) {
+        if (this.readyState !== WebSocket2.OPEN) {
           sendAfterClose(this, data, cb);
           return;
         }
@@ -23542,7 +23542,7 @@ var require_websocket = __commonJS({
         this._sender.ping(data || EMPTY_BUFFER, mask, cb);
       }
       pong(data, mask, cb) {
-        if (this.readyState === WebSocket3.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof data === "function") {
@@ -23554,7 +23554,7 @@ var require_websocket = __commonJS({
         }
         if (typeof data === "number")
           data = data.toString();
-        if (this.readyState !== WebSocket3.OPEN) {
+        if (this.readyState !== WebSocket2.OPEN) {
           sendAfterClose(this, data, cb);
           return;
         }
@@ -23563,7 +23563,7 @@ var require_websocket = __commonJS({
         this._sender.pong(data || EMPTY_BUFFER, mask, cb);
       }
       resume() {
-        if (this.readyState === WebSocket3.CONNECTING || this.readyState === WebSocket3.CLOSED) {
+        if (this.readyState === WebSocket2.CONNECTING || this.readyState === WebSocket2.CLOSED) {
           return;
         }
         this._paused = false;
@@ -23571,7 +23571,7 @@ var require_websocket = __commonJS({
           this._socket.resume();
       }
       send(data, options, cb) {
-        if (this.readyState === WebSocket3.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof options === "function") {
@@ -23580,7 +23580,7 @@ var require_websocket = __commonJS({
         }
         if (typeof data === "number")
           data = data.toString();
-        if (this.readyState !== WebSocket3.OPEN) {
+        if (this.readyState !== WebSocket2.OPEN) {
           sendAfterClose(this, data, cb);
           return;
         }
@@ -23597,47 +23597,47 @@ var require_websocket = __commonJS({
         this._sender.send(data || EMPTY_BUFFER, opts, cb);
       }
       terminate() {
-        if (this.readyState === WebSocket3.CLOSED)
+        if (this.readyState === WebSocket2.CLOSED)
           return;
-        if (this.readyState === WebSocket3.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           const msg = "WebSocket was closed before the connection was established";
           return abortHandshake(this, this._req, msg);
         }
         if (this._socket) {
-          this._readyState = WebSocket3.CLOSING;
+          this._readyState = WebSocket2.CLOSING;
           this._socket.destroy();
         }
       }
     };
-    Object.defineProperty(WebSocket3, "CONNECTING", {
+    Object.defineProperty(WebSocket2, "CONNECTING", {
       enumerable: true,
       value: readyStates.indexOf("CONNECTING")
     });
-    Object.defineProperty(WebSocket3.prototype, "CONNECTING", {
+    Object.defineProperty(WebSocket2.prototype, "CONNECTING", {
       enumerable: true,
       value: readyStates.indexOf("CONNECTING")
     });
-    Object.defineProperty(WebSocket3, "OPEN", {
+    Object.defineProperty(WebSocket2, "OPEN", {
       enumerable: true,
       value: readyStates.indexOf("OPEN")
     });
-    Object.defineProperty(WebSocket3.prototype, "OPEN", {
+    Object.defineProperty(WebSocket2.prototype, "OPEN", {
       enumerable: true,
       value: readyStates.indexOf("OPEN")
     });
-    Object.defineProperty(WebSocket3, "CLOSING", {
+    Object.defineProperty(WebSocket2, "CLOSING", {
       enumerable: true,
       value: readyStates.indexOf("CLOSING")
     });
-    Object.defineProperty(WebSocket3.prototype, "CLOSING", {
+    Object.defineProperty(WebSocket2.prototype, "CLOSING", {
       enumerable: true,
       value: readyStates.indexOf("CLOSING")
     });
-    Object.defineProperty(WebSocket3, "CLOSED", {
+    Object.defineProperty(WebSocket2, "CLOSED", {
       enumerable: true,
       value: readyStates.indexOf("CLOSED")
     });
-    Object.defineProperty(WebSocket3.prototype, "CLOSED", {
+    Object.defineProperty(WebSocket2.prototype, "CLOSED", {
       enumerable: true,
       value: readyStates.indexOf("CLOSED")
     });
@@ -23650,10 +23650,10 @@ var require_websocket = __commonJS({
       "readyState",
       "url"
     ].forEach((property) => {
-      Object.defineProperty(WebSocket3.prototype, property, { enumerable: true });
+      Object.defineProperty(WebSocket2.prototype, property, { enumerable: true });
     });
     ["open", "error", "close", "message"].forEach((method) => {
-      Object.defineProperty(WebSocket3.prototype, `on${method}`, {
+      Object.defineProperty(WebSocket2.prototype, `on${method}`, {
         enumerable: true,
         get() {
           for (const listener of this.listeners(method)) {
@@ -23677,9 +23677,9 @@ var require_websocket = __commonJS({
         }
       });
     });
-    WebSocket3.prototype.addEventListener = addEventListener;
-    WebSocket3.prototype.removeEventListener = removeEventListener;
-    module2.exports = WebSocket3;
+    WebSocket2.prototype.addEventListener = addEventListener;
+    WebSocket2.prototype.removeEventListener = removeEventListener;
+    module2.exports = WebSocket2;
     function initAsClient(websocket, address, protocols, options) {
       const opts = {
         protocolVersion: protocolVersions[1],
@@ -23849,7 +23849,7 @@ var require_websocket = __commonJS({
       });
       req.on("upgrade", (res, socket, head) => {
         websocket.emit("upgrade", res);
-        if (websocket.readyState !== WebSocket3.CONNECTING)
+        if (websocket.readyState !== WebSocket2.CONNECTING)
           return;
         req = websocket._req = null;
         if (res.headers.upgrade.toLowerCase() !== "websocket") {
@@ -23917,7 +23917,7 @@ var require_websocket = __commonJS({
       req.end();
     }
     function emitErrorAndClose(websocket, err) {
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       websocket.emit("error", err);
       websocket.emitClose();
     }
@@ -23933,7 +23933,7 @@ var require_websocket = __commonJS({
       return tls.connect(options);
     }
     function abortHandshake(websocket, stream, message) {
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       const err = new Error(message);
       Error.captureStackTrace(err, abortHandshake);
       if (stream.setHeader) {
@@ -24012,7 +24012,7 @@ var require_websocket = __commonJS({
       this.removeListener("close", socketOnClose);
       this.removeListener("data", socketOnData);
       this.removeListener("end", socketOnEnd);
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       let chunk;
       if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk = websocket._socket.read()) !== null) {
         websocket._receiver.write(chunk);
@@ -24034,7 +24034,7 @@ var require_websocket = __commonJS({
     }
     function socketOnEnd() {
       const websocket = this[kWebSocket];
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       websocket._receiver.end();
       this.end();
     }
@@ -24043,7 +24043,7 @@ var require_websocket = __commonJS({
       this.removeListener("error", socketOnError);
       this.on("error", NOOP);
       if (websocket) {
-        websocket._readyState = WebSocket3.CLOSING;
+        websocket._readyState = WebSocket2.CLOSING;
         this.destroy();
       }
     }
@@ -24111,7 +24111,7 @@ var require_websocket_server = __commonJS({
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
-    var WebSocket3 = require_websocket();
+    var WebSocket2 = require_websocket();
     var { GUID, kWebSocket } = require_constants();
     var keyRegex = /^[+/0-9A-Za-z]{22}==$/;
     var RUNNING = 0;
@@ -24133,7 +24133,7 @@ var require_websocket_server = __commonJS({
           host: null,
           path: null,
           port: null,
-          WebSocket: WebSocket3,
+          WebSocket: WebSocket2,
           ...options
         };
         if (options.port == null && !options.server && !options.noServer || options.port != null && (options.server || options.noServer) || options.server && options.noServer) {
@@ -24412,26 +24412,23 @@ var import_websocket_server = __toESM(require_websocket_server(), 1);
 
 // src/server.ts
 var createWsServer = (server) => {
-  const wss = new import_websocket_server.default({ server });
-  console.log({ wss });
+  const wss = new import_websocket_server.default({ noServer: true });
   server.on("upgrade", function upgrade(request, socket, head) {
-    console.log("~~upgrade~~");
-    wss.handleUpgrade(request, socket, head, function done(ws) {
-      wss.emit("connection", ws, request);
-    });
+    if (request.headers["sec-websocket-protocol"] === "malita-hmr") {
+      wss.handleUpgrade(request, socket, head, function done(ws) {
+        wss.emit("connection", ws, request);
+      });
+    }
   });
   wss.on("connection", function connection(ws) {
-    ws.on("message", function message(data) {
-      console.log("received: %s", data);
-    });
-    ws.send("something");
+    ws.send(JSON.stringify({ type: "connection" }));
   });
   return {
     wss,
-    send: (text) => {
+    send: (type) => {
       wss.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(text);
+        if (client.readyState === 1) {
+          client.send(type);
         }
       });
     }
@@ -24448,8 +24445,8 @@ var DEFAULT_HOST = "127.0.0.1";
 var dev = () => __async(void 0, null, function* () {
   const app = (0, import_express.default)();
   const cwd = process.cwd();
-  const server = (0, import_http.createServer)(app);
-  const { wss, send } = createWsServer(server);
+  const malitaServe = (0, import_http.createServer)(app);
+  const { send } = createWsServer(malitaServe);
   const output = import_path.default.resolve(cwd, DEFAULT_OUTPUT);
   app.get("/", function(_req, res) {
     res.send(`
@@ -24465,13 +24462,12 @@ var dev = () => __async(void 0, null, function* () {
       </html>
     `);
   });
-  console.log("__dirname: ", __dirname);
   app.use("/malita", import_express.default.static(output));
   app.use("/client", import_express.default.static(import_path.default.resolve(__dirname, "client")));
-  const sendMessage = (text) => {
-    send(JSON.stringify(text));
+  const sendMessage = (type) => {
+    send(JSON.stringify({ type }));
   };
-  server.listen(DEFAULT_POST, () => __async(void 0, null, function* () {
+  malitaServe.listen(DEFAULT_POST, () => __async(void 0, null, function* () {
     yield (0, import_esbuild.build)({
       bundle: true,
       outdir: DEFAULT_OUTPUT,

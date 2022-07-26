@@ -14,8 +14,8 @@ import {
 export const dev = async () => {
   const app = express();
   const cwd = process.cwd();
-  const server = createServer(app);
-  const { wss, send } = createWsServer(server);
+  const malitaServe = createServer(app);
+  const { send } = createWsServer(malitaServe);
   const output = path.resolve(cwd, DEFAULT_OUTPUT);
 
   app.get("/", function (_req, res) {
@@ -33,16 +33,14 @@ export const dev = async () => {
     `);
   });
 
-  console.log("__dirname: ", __dirname);
-
   app.use("/malita", express.static(output));
   app.use("/client", express.static(path.resolve(__dirname, "client")));
 
-  const sendMessage = (text: string) => {
-    send(JSON.stringify(text));
+  const sendMessage = (type: string) => {
+    send(JSON.stringify({ type }));
   };
 
-  server.listen(DEFAULT_POST, async () => {
+  malitaServe.listen(DEFAULT_POST, async () => {
     await build({
       bundle: true,
       outdir: DEFAULT_OUTPUT,
