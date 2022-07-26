@@ -22643,7 +22643,7 @@ var require_client = __commonJS({
 var import_react = __toESM(require_react());
 var import_client = __toESM(require_client());
 var Hello = () => {
-  const [text, setText] = import_react.default.useState("Hi~, click me");
+  const [text, setText] = import_react.default.useState("Hi~, click me1231");
   return /* @__PURE__ */ import_react.default.createElement("div", {
     onClick: () => setText("Malita")
   }, text);

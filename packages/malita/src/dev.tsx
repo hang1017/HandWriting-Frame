@@ -1,17 +1,22 @@
 import express from "express";
 import { build } from "esbuild";
 import path from "path";
+import { createServer } from "http";
 import {
   DEFAULT_OUTPUT,
   DEFAULT_POST,
   DEFAULT_ENTRY_POINTS,
   DEFAULT_HOST,
 } from "./contants";
+import { createSocketServer } from "./server";
 
 export const dev = async () => {
   const app = express();
+  const malitaServer = createServer(app);
   const cwd = process.cwd();
   const output = path.resolve(cwd, DEFAULT_OUTPUT);
+
+  const { send } = createSocketServer(malitaServer);
 
   app.get("/", function (_req, res) {
     res.send(`
@@ -21,16 +26,21 @@ export const dev = async () => {
               <div id="root">
                   <div>loading...</div>
               </div>
-      
               <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/malita/index.js"></script>
+              <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/client/index.js"></script>
           </body>
       </html>
     `);
   });
 
   app.use("/malita", express.static(output));
+  app.use("/client", express.static(path.resolve(__dirname, "client")));
 
-  app.listen(DEFAULT_POST, async () => {
+  const sendMessage = (type: string) => {
+    send({ type });
+  };
+
+  malitaServer.listen(DEFAULT_POST, async () => {
     await build({
       bundle: true,
       outdir: DEFAULT_OUTPUT,
@@ -38,6 +48,15 @@ export const dev = async () => {
       external: ["esbuild"],
       define: {
         "process.env.NODE_ENV": JSON.stringify("development"),
+      },
+      watch: {
+        onRebuild: (err, _result) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          sendMessage("reload");
+        },
       },
       entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINTS)],
     });
