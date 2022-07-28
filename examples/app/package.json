@@ -22,6 +22,7 @@
   "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
   "dependencies": {
     "@babel/standalone": "^7.18.9",
+    "@malitajs/keepalive": "workspace:*",
     "malita": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
