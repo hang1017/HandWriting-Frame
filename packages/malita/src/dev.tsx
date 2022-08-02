@@ -2,13 +2,9 @@ import express from "express";
 import { build } from "esbuild";
 import path from "path";
 import { createServer } from "http";
-import {
-  DEFAULT_OUTPUT,
-  DEFAULT_POST,
-  DEFAULT_ENTRY_POINTS,
-  DEFAULT_HOST,
-} from "./contants";
+import { DEFAULT_OUTPUT, DEFAULT_POST, DEFAULT_ENTRY_POINTS, DEFAULT_HOST } from "./contants";
 import { createSocketServer } from "./server";
+import { styles } from "./styles";
 
 export const dev = async () => {
   const app = express();
@@ -19,13 +15,19 @@ export const dev = async () => {
   const { send } = createSocketServer(malitaServer);
 
   app.get("/", function (_req, res) {
+    res.set("Content-Type", "text/html");
     res.send(`
       <!DOCTYPE html>
       <html>
+          <head>
+          <meta charset="UTF-8">
+            <link rel="styleshreet" type="text/css" herf="http://${DEFAULT_HOST}:${DEFAULT_POST}/malita/index.css">
+          </head>
           <body>
               <div id="root">
                   <div>loading...</div>
               </div>
+
               <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/malita/index.js"></script>
               <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/client/index.js"></script>
           </body>
@@ -43,8 +45,9 @@ export const dev = async () => {
   malitaServer.listen(DEFAULT_POST, async () => {
     await build({
       bundle: true,
-      outdir: DEFAULT_OUTPUT,
+      outdir: output,
       platform: "node",
+      format: "iife",
       external: ["esbuild"],
       define: {
         "process.env.NODE_ENV": JSON.stringify("development"),
@@ -58,6 +61,7 @@ export const dev = async () => {
           sendMessage("reload");
         },
       },
+      plugins: [styles()],
       entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINTS)],
     });
     console.log(`server start: http://${DEFAULT_HOST}:3000`);
