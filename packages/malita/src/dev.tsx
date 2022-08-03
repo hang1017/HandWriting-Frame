@@ -4,6 +4,8 @@ import path from "path";
 import { createServer } from "http";
 import { DEFAULT_OUTPUT, DEFAULT_POST, DEFAULT_ENTRY_POINTS, DEFAULT_HOST } from "./contants";
 import { createSocketServer } from "./server";
+import { getAppData } from "./appData";
+import { getRouter } from "./router";
 import { styles } from "./styles";
 
 export const dev = async () => {
@@ -43,6 +45,10 @@ export const dev = async () => {
   };
 
   malitaServer.listen(DEFAULT_POST, async () => {
+    const appData = getAppData({ cwd });
+    const router = await getRouter({ appData });
+    console.log(JSON.stringify(router));
+
     await build({
       bundle: true,
       outdir: output,
