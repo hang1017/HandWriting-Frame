@@ -5,7 +5,7 @@ export const createSocketServer = (server: Server) => {
   const wss = new WebSocketServer({ noServer: true });
 
   server.on("upgrade", function upgrade(request, socket, head) {
-    if (request.headers["Sec-WebSocket-Protocol"] === "malita_hmr") {
+    if (request.headers["sec-websocket-protocol"] === "malita_hmr") {
       wss.handleUpgrade(request, socket, head, function done(ws) {
         wss.emit("connection", ws, request);
       });
