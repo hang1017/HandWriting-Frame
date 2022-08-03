@@ -21,7 +21,7 @@ const findTsxFile = async (paths: string) => {
       const isFile = (await fileStats).isFile(); //是文件
       if (isFile) {
         list.push({
-          element: filePath,
+          element: `${absPath}/index`,
           path: item === "home" ? "/" : `/${item}`,
         });
       }
@@ -31,18 +31,18 @@ const findTsxFile = async (paths: string) => {
 };
 
 export const getRouter = async ({ appData }: { appData: AppDataProps }) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve: (res: RouteProps[]) => void, reject) => {
     try {
       const pagesPath = appData.paths.absPagesPath;
       let files = await findTsxFile(pagesPath);
 
-      const layoutPath = path.join(appData.paths.absSrcPath, "layout", "index.tsx");
+      const layoutPath = path.join(appData.paths.absSrcPath, "layouts", "index.tsx");
       const isFile = await existsSync(layoutPath);
       if (isFile) {
         files = [
           {
             path: "/",
-            element: layoutPath,
+            element: `${path.join(appData.paths.absSrcPath, "layouts")}/index`,
             children: files,
           },
         ];

@@ -7,6 +7,7 @@ import { createSocketServer } from "./server";
 import { getAppData } from "./appData";
 import { getRouter } from "./router";
 import { styles } from "./styles";
+import { getEnrty } from "./entry";
 
 export const dev = async () => {
   const app = express();
@@ -45,9 +46,9 @@ export const dev = async () => {
   };
 
   malitaServer.listen(DEFAULT_POST, async () => {
-    const appData = getAppData({ cwd });
+    const appData = await getAppData({ cwd });
     const router = await getRouter({ appData });
-    console.log(JSON.stringify(router));
+    await getEnrty({ appData, router });
 
     await build({
       bundle: true,
@@ -68,7 +69,7 @@ export const dev = async () => {
         },
       },
       plugins: [styles()],
-      entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINTS)],
+      entryPoints: [path.resolve(appData.paths.absTempPath, "entry")],
     });
     console.log(`server start: http://${DEFAULT_HOST}:3000`);
   });
