@@ -26986,6 +26986,7 @@ var import_http = require("http");
 // src/contants.ts
 var DEFAULT_OUTPUT = "www";
 var DEFAULT_POST = 3e3;
+var DEFAULT_ENTRY_POINTS = "malita.tsx";
 var DEFAULT_HOST = "127.0.0.1";
 var DEFAULT_TMEP = ".malita";
 
@@ -27031,6 +27032,7 @@ var getAppData = (_0) => __async(void 0, [_0], function* ({ cwd }) {
       const absOutputPath = import_path.default.resolve(cwd, DEFAULT_OUTPUT);
       const absNodeModulesPath = import_path.default.resolve(cwd, "node_modules");
       const absTempPath = import_path.default.join(absNodeModulesPath, DEFAULT_TMEP);
+      const absEntryPointPath = import_path.default.join(absTempPath, DEFAULT_ENTRY_POINTS);
       const data = {
         paths: {
           cwd,
@@ -27038,7 +27040,8 @@ var getAppData = (_0) => __async(void 0, [_0], function* ({ cwd }) {
           absPagesPath,
           absOutputPath,
           absNodeModulesPath,
-          absTempPath
+          absTempPath,
+          absEntryPointPath
         },
         pkg: require(import_path.default.resolve(cwd, "package.json"))
       };
@@ -27229,7 +27232,7 @@ var getEnrty = (_0) => __async(void 0, [_0], function* ({
       const text = getRouteText(router, 0);
       const content = getRouteHtml(text);
       (0, import_fs_extra2.ensureDirSync)(appData.paths.absTempPath);
-      (0, import_fs_extra2.writeFile)(import_path4.default.join(appData.paths.absTempPath, "entry.tsx"), content);
+      (0, import_fs_extra2.writeFile)(import_path4.default.join(appData.paths.absEntryPointPath), content, "utf-8");
       resolve(true);
     } catch (e) {
     }
@@ -27292,7 +27295,7 @@ var dev = () => __async(void 0, null, function* () {
         }
       },
       plugins: [styles()],
-      entryPoints: [import_path5.default.resolve(appData.paths.absTempPath, "entry")]
+      entryPoints: [appData.paths.absEntryPointPath]
     });
     console.log(`server start: http://${DEFAULT_HOST}:3000`);
   }));

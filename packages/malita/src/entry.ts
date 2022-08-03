@@ -59,7 +59,7 @@ export const getEnrty = async ({
       const text = getRouteText(router, 0);
       const content = getRouteHtml(text);
       ensureDirSync(appData.paths.absTempPath);
-      writeFile(path.join(appData.paths.absTempPath, "entry.tsx"), content);
+      writeFile(path.join(appData.paths.absEntryPointPath), content, "utf-8");
       resolve(true);
     } catch (e) {}
     reject(false);

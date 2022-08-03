@@ -69,7 +69,7 @@ export const dev = async () => {
         },
       },
       plugins: [styles()],
-      entryPoints: [path.resolve(appData.paths.absTempPath, "entry")],
+      entryPoints: [appData.paths.absEntryPointPath],
     });
     console.log(`server start: http://${DEFAULT_HOST}:3000`);
   });
