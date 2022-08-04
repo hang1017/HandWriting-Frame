@@ -10,6 +10,7 @@ import { getRouter } from "./router";
 import { styles } from "./styles";
 import { getEnrty } from "./entry";
 import { getHtml } from "./html";
+import { getConfig } from "./config";
 
 export const dev = async () => {
   const app = express();
@@ -38,9 +39,10 @@ export const dev = async () => {
 
   malitaServer.listen(DEFAULT_POST, async () => {
     const appData = await getAppData({ cwd });
+    const config = await getConfig({ appData, sendMessage });
     const router = await getRouter({ appData });
     await getEnrty({ appData, router });
-    await getHtml({ appData });
+    await getHtml({ appData, config });
 
     await build({
       bundle: true,
