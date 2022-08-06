@@ -12,6 +12,7 @@ import { getEnrty } from "./entry";
 import { getHtml } from "./html";
 import { getConfig } from "./config";
 import type { AppDataProps } from "./appData";
+import { getProxy } from "./proxy";
 
 export const dev = async () => {
   const app = express();
@@ -40,6 +41,10 @@ export const dev = async () => {
 
     await getEnrty({ appData, router, config });
     await getHtml({ appData, config });
+    if (config?.proxy) {
+      const { proxy } = config;
+      await getProxy({ proxy, app });
+    }
   };
 
   const sendMessage = async (type: string) => {

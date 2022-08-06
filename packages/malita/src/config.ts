@@ -2,12 +2,14 @@ import type { AppDataProps } from "./appData";
 import path from "path";
 import { Server } from "http";
 import { existsSync } from "fs-extra";
-import { DEFAULT_CONFIG_FILE } from "./contants";
 import { build } from "esbuild";
+import { DEFAULT_CONFIG_FILE } from "./contants";
+import { ProxyProps } from "./proxy";
 
 export interface ConfigProps {
   title?: string;
   keepalive?: (string | RegExp)[];
+  proxy?: ProxyProps;
 }
 
 export const getConfig = async ({
