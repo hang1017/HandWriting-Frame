@@ -13,6 +13,7 @@ import { getHtml } from "./html";
 import { getConfig } from "./config";
 import type { AppDataProps } from "./appData";
 import { getProxy } from "./proxy";
+import { getMock } from "./mock";
 
 export const dev = async () => {
   const app = express();
@@ -45,6 +46,7 @@ export const dev = async () => {
       const { proxy } = config;
       await getProxy({ proxy, app });
     }
+    await getMock({ appData });
   };
 
   const sendMessage = async (type: string) => {
