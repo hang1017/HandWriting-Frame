@@ -1,5 +1,6 @@
 import type { AppDataProps } from "./appData";
 import path from "path";
+import { Server } from "http";
 import { existsSync } from "fs-extra";
 import { DEFAULT_CONFIG_FILE } from "./contants";
 import { build } from "esbuild";
@@ -11,10 +12,10 @@ export interface ConfigProps {
 
 export const getConfig = async ({
   appData,
-  sendMessage,
+  malitaServer,
 }: {
   appData: AppDataProps;
-  sendMessage: (type: string) => void;
+  malitaServer: Server;
 }) => {
   return new Promise(async (resolve: (res: ConfigProps) => void, reject) => {
     let config = {};
@@ -39,11 +40,12 @@ export const getConfig = async ({
               console.log(err);
               return;
             }
-            sendMessage("reload");
+            malitaServer.emit("REBUILD", { appData });
           },
         },
       });
       if (existsSync(outFilePath)) {
+        delete require.cache[outFilePath];
         config = require(outFilePath).default;
       }
       resolve(config);

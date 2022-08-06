@@ -11,6 +11,7 @@ import { styles } from "./styles";
 import { getEnrty } from "./entry";
 import { getHtml } from "./html";
 import { getConfig } from "./config";
+import type { AppDataProps } from "./appData";
 
 export const dev = async () => {
   const app = express();
@@ -33,16 +34,26 @@ export const dev = async () => {
   app.use(`/${DEFAULT_OUTPUT}`, express.static(output));
   app.use("/client", express.static(path.resolve(__dirname, "client")));
 
-  const sendMessage = (type: string) => {
+  const startConfig = async ({ appData }: { appData: AppDataProps }) => {
+    const router = await getRouter({ appData });
+    const config = await getConfig({ appData, malitaServer });
+
+    await getEnrty({ appData, router, config });
+    await getHtml({ appData, config });
+  };
+
+  const sendMessage = async (type: string) => {
     send({ type });
   };
 
+  malitaServer.on("REBUILD", async ({ appData }) => {
+    await startConfig({ appData });
+    sendMessage("reload");
+  });
+
   malitaServer.listen(DEFAULT_POST, async () => {
     const appData = await getAppData({ cwd });
-    const config = await getConfig({ appData, sendMessage });
-    const router = await getRouter({ appData });
-    await getEnrty({ appData, router, config });
-    await getHtml({ appData, config });
+    await startConfig({ appData });
 
     await build({
       bundle: true,

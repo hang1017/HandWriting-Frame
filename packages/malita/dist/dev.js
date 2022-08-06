@@ -27318,7 +27318,7 @@ var import_fs_extra4 = __toESM(require_lib3());
 var import_esbuild2 = require("esbuild");
 var getConfig = (_0) => __async(void 0, [_0], function* ({
   appData,
-  sendMessage
+  malitaServer
 }) {
   return new Promise((resolve, reject) => __async(void 0, null, function* () {
     let config = {};
@@ -27343,11 +27343,12 @@ var getConfig = (_0) => __async(void 0, [_0], function* ({
               console.log(err);
               return;
             }
-            sendMessage("reload");
+            malitaServer.emit("REBUILD", { appData });
           }
         }
       });
       if ((0, import_fs_extra4.existsSync)(outFilePath)) {
+        delete require.cache[outFilePath];
         config = require(outFilePath).default;
       }
       resolve(config);
@@ -27375,15 +27376,22 @@ var dev = () => __async(void 0, null, function* () {
   });
   app.use(`/${DEFAULT_OUTPUT}`, import_express.default.static(output));
   app.use("/client", import_express.default.static(import_path7.default.resolve(__dirname, "client")));
-  const sendMessage = (type) => {
-    send({ type });
-  };
-  malitaServer.listen(DEFAULT_POST, () => __async(void 0, null, function* () {
-    const appData = yield getAppData({ cwd });
-    const config = yield getConfig({ appData, sendMessage });
+  const startConfig = (_0) => __async(void 0, [_0], function* ({ appData }) {
     const router = yield getRouter({ appData });
+    const config = yield getConfig({ appData, malitaServer });
     yield getEnrty({ appData, router, config });
     yield getHtml({ appData, config });
+  });
+  const sendMessage = (type) => __async(void 0, null, function* () {
+    send({ type });
+  });
+  malitaServer.on("REBUILD", (_0) => __async(void 0, [_0], function* ({ appData }) {
+    yield startConfig({ appData });
+    sendMessage("reload");
+  }));
+  malitaServer.listen(DEFAULT_POST, () => __async(void 0, null, function* () {
+    const appData = yield getAppData({ cwd });
+    yield startConfig({ appData });
     yield (0, import_esbuild3.build)({
       bundle: true,
       outdir: output,
