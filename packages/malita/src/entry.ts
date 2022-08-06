@@ -2,6 +2,7 @@ import { ensureDirSync, writeFile } from "fs-extra";
 import path from "path";
 import type { AppDataProps } from "./appData";
 import type { RouteProps } from "./router";
+import type { ConfigProps } from "./config";
 
 const getRouteText = (router: RouteProps[], index: number) => {
   let i = 0;
@@ -21,7 +22,26 @@ const getRouteText = (router: RouteProps[], index: number) => {
   return { impStr, rouStr };
 };
 
-const getRouteHtml = ({ impStr, rouStr }: { impStr: string; rouStr: string }) => {
+const configStringify = (keepalive: (string | RegExp)[]) => {
+  return (keepalive || []).map((item) => {
+    if (item instanceof RegExp) {
+      return item;
+    }
+    return `'${item}'`;
+  });
+};
+
+const getRouteHtml = ({
+  impStr,
+  rouStr,
+  config,
+}: {
+  impStr: string;
+  rouStr: string;
+  config: ConfigProps;
+}) => {
+  const { keepalive = [] } = config;
+
   return `
     import React from "react";
     import ReactDOM from "react-dom/client";
@@ -31,7 +51,7 @@ const getRouteHtml = ({ impStr, rouStr }: { impStr: string; rouStr: string }) =>
     const Hello = () => {
       const [text, setText] = React.useState("Hi~, click me1231");
       return (
-        <KeepAliveLayout keepalive={["/user"]}>
+        <KeepAliveLayout keepalive={[${configStringify(keepalive)}]}>
           <HashRouter>
             <div onClick={() => setText("Malita")}>{text}</div>
             <Routes>
@@ -50,14 +70,16 @@ const getRouteHtml = ({ impStr, rouStr }: { impStr: string; rouStr: string }) =>
 export const getEnrty = async ({
   appData,
   router,
+  config,
 }: {
   appData: AppDataProps;
   router: RouteProps[];
+  config: ConfigProps;
 }) => {
   return new Promise((resolve: (res: boolean) => void, reject) => {
     try {
       const text = getRouteText(router, 0);
-      const content = getRouteHtml(text);
+      const content = getRouteHtml({ ...text, config });
       ensureDirSync(appData.paths.absTempPath);
       writeFile(path.join(appData.paths.absEntryPointPath), content, "utf-8");
       resolve(true);

@@ -1,10 +1,27 @@
 "use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
@@ -27201,7 +27218,20 @@ var getRouteText = (router, index) => {
   });
   return { impStr, rouStr };
 };
-var getRouteHtml = ({ impStr, rouStr }) => {
+var configStringify = (keepalive) => {
+  return (keepalive || []).map((item) => {
+    if (item instanceof RegExp) {
+      return item;
+    }
+    return `'${item}'`;
+  });
+};
+var getRouteHtml = ({
+  impStr,
+  rouStr,
+  config
+}) => {
+  const { keepalive = [] } = config;
   return `
     import React from "react";
     import ReactDOM from "react-dom/client";
@@ -27211,7 +27241,7 @@ var getRouteHtml = ({ impStr, rouStr }) => {
     const Hello = () => {
       const [text, setText] = React.useState("Hi~, click me1231");
       return (
-        <KeepAliveLayout keepalive={["/user"]}>
+        <KeepAliveLayout keepalive={[${configStringify(keepalive)}]}>
           <HashRouter>
             <div onClick={() => setText("Malita")}>{text}</div>
             <Routes>
@@ -27228,12 +27258,13 @@ var getRouteHtml = ({ impStr, rouStr }) => {
 };
 var getEnrty = (_0) => __async(void 0, [_0], function* ({
   appData,
-  router
+  router,
+  config
 }) {
   return new Promise((resolve, reject) => {
     try {
       const text = getRouteText(router, 0);
-      const content = getRouteHtml(text);
+      const content = getRouteHtml(__spreadProps(__spreadValues({}, text), { config }));
       (0, import_fs_extra2.ensureDirSync)(appData.paths.absTempPath);
       (0, import_fs_extra2.writeFile)(import_path4.default.join(appData.paths.absEntryPointPath), content, "utf-8");
       resolve(true);
@@ -27299,6 +27330,7 @@ var getConfig = (_0) => __async(void 0, [_0], function* ({
         charset: "utf8",
         external: ["esbuild"],
         format: "cjs",
+        platform: "node",
         logLevel: "error",
         entryPoints: [configPath],
         outfile: outFilePath,
@@ -27350,7 +27382,7 @@ var dev = () => __async(void 0, null, function* () {
     const appData = yield getAppData({ cwd });
     const config = yield getConfig({ appData, sendMessage });
     const router = yield getRouter({ appData });
-    yield getEnrty({ appData, router });
+    yield getEnrty({ appData, router, config });
     yield getHtml({ appData, config });
     yield (0, import_esbuild3.build)({
       bundle: true,

@@ -41,7 +41,7 @@ export const dev = async () => {
     const appData = await getAppData({ cwd });
     const config = await getConfig({ appData, sendMessage });
     const router = await getRouter({ appData });
-    await getEnrty({ appData, router });
+    await getEnrty({ appData, router, config });
     await getHtml({ appData, config });
 
     await build({

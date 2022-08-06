@@ -26,6 +26,7 @@ export const getConfig = async ({
         charset: "utf8",
         external: ["esbuild"],
         format: "cjs",
+        platform: "node",
         logLevel: "error",
         entryPoints: [configPath],
         outfile: outFilePath,
