@@ -46,7 +46,7 @@ export const dev = async () => {
       const { proxy } = config;
       await getProxy({ proxy, app });
     }
-    await getMock({ appData });
+    await getMock({ appData, malitaServer, app });
   };
 
   const sendMessage = async (type: string) => {

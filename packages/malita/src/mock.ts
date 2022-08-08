@@ -1,9 +1,17 @@
 import glob from "glob";
 import { build } from "esbuild";
 import path from "path";
+import { Request, Response } from "express";
+import type { Express } from "express";
 import { readdirSync, existsSync } from "fs-extra";
 import { Server } from "http";
 import type { AppDataProps } from "./appData";
+
+const cleanRequireCache = (absMockPath: string) => {
+  Object.keys(require.cache).forEach((item) => {
+    if (item.indexOf(absMockPath) !== -1) delete require.cache[item];
+  });
+};
 
 const getMethod = (str: string) => {
   const list = str.split(" ");
@@ -20,8 +28,8 @@ const getMethod = (str: string) => {
 };
 
 const dataStructure = async (mockFile: string) => {
-  const post = {} as Record<string, any>;
-  const get = {} as Record<string, any>;
+  const POST = {} as Record<string, any>;
+  const GET = {} as Record<string, any>;
   let files = readdirSync(mockFile);
   files.forEach((item) => {
     const filePath = path.join(mockFile, item);
@@ -30,22 +38,24 @@ const dataStructure = async (mockFile: string) => {
     Object.entries(mock || {}).forEach(([key, obj]: [string, any]) => {
       const { method, url } = getMethod(key);
       if (method === "GET") {
-        get[url] = obj;
+        GET[url] = obj;
       } else {
-        post[url] = obj;
+        POST[url] = obj;
       }
     });
   });
 
-  return { post, get };
+  return { POST, GET };
 };
 
 export const getMock = async ({
   appData,
   malitaServer,
+  app,
 }: {
   appData: AppDataProps;
   malitaServer: Server;
+  app: Express;
 }) => {
   return new Promise((resolve: (res: boolean) => void, reject) => {
     try {
@@ -78,9 +88,21 @@ export const getMock = async ({
         });
 
         if (existsSync(mockFile)) {
-          delete require.cache[mockFile];
-          const { post, get } = await dataStructure(mockFile);
-          console.log({ post, get });
+          cleanRequireCache(mockFile);
+          const mockData = (await dataStructure(mockFile)) as any;
+          app.use((req: Request, res: Response, next) => {
+            const mockConfig = mockData?.[req.method]?.[req.url];
+            const result = Object.prototype.toString.call(mockConfig);
+            if (
+              result === "[object Array]" ||
+              result === "[object String]" ||
+              result === "[object Object]"
+            ) {
+              res.json(mockConfig);
+            } else if (result === "[object Function]") {
+              mockConfig(req, res);
+            } else next();
+          });
         }
       });
       resolve(true);

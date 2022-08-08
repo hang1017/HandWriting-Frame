@@ -34361,6 +34361,12 @@ var import_glob = __toESM(require_glob());
 var import_esbuild3 = require("esbuild");
 var import_path7 = __toESM(require("path"));
 var import_fs_extra5 = __toESM(require_lib3());
+var cleanRequireCache = (absMockPath) => {
+  Object.keys(require.cache).forEach((item) => {
+    if (item.indexOf(absMockPath) !== -1)
+      delete require.cache[item];
+  });
+};
 var getMethod = (str) => {
   const list = str.split(" ");
   if (list && list.length === 2) {
@@ -34375,8 +34381,8 @@ var getMethod = (str) => {
   };
 };
 var dataStructure = (mockFile) => __async(void 0, null, function* () {
-  const post = {};
-  const get = {};
+  const POST = {};
+  const GET = {};
   let files = (0, import_fs_extra5.readdirSync)(mockFile);
   files.forEach((item) => {
     const filePath = import_path7.default.join(mockFile, item);
@@ -34385,17 +34391,18 @@ var dataStructure = (mockFile) => __async(void 0, null, function* () {
     Object.entries(mock || {}).forEach(([key, obj]) => {
       const { method, url } = getMethod(key);
       if (method === "GET") {
-        get[url] = obj;
+        GET[url] = obj;
       } else {
-        post[url] = obj;
+        POST[url] = obj;
       }
     });
   });
-  return { post, get };
+  return { POST, GET };
 });
 var getMock = (_0) => __async(void 0, [_0], function* ({
   appData,
-  malitaServer
+  malitaServer,
+  app
 }) {
   return new Promise((resolve, reject) => {
     try {
@@ -34428,9 +34435,19 @@ var getMock = (_0) => __async(void 0, [_0], function* ({
             }
           });
           if ((0, import_fs_extra5.existsSync)(mockFile)) {
-            delete require.cache[mockFile];
-            const { post, get } = yield dataStructure(mockFile);
-            console.log({ post, get });
+            cleanRequireCache(mockFile);
+            const mockData = yield dataStructure(mockFile);
+            app.use((req, res, next) => {
+              var _a;
+              const mockConfig = (_a = mockData == null ? void 0 : mockData[req.method]) == null ? void 0 : _a[req.url];
+              const result = Object.prototype.toString.call(mockConfig);
+              if (result === "[object Array]" || result === "[object String]" || result === "[object Object]") {
+                res.json(mockConfig);
+              } else if (result === "[object Function]") {
+                mockConfig(req, res);
+              } else
+                next();
+            });
           }
         });
       });
@@ -34468,7 +34485,7 @@ var dev = () => __async(void 0, null, function* () {
       const { proxy } = config;
       yield getProxy({ proxy, app });
     }
-    yield getMock({ appData });
+    yield getMock({ appData, malitaServer, app });
   });
   const sendMessage = (type) => __async(void 0, null, function* () {
     send({ type });
