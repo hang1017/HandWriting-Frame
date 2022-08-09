@@ -1,7 +1,7 @@
 import type { PluginBuild, OnResolveArgs, OnLoadArgs } from "esbuild";
 import { build } from "esbuild";
 import path from "path";
-import postcss from "postcss";
+import postcss from "../compiled/postcss";
 // @ts-ignore
 import pxtorem from "@alitajs/postcss-plugin-px2rem";
 

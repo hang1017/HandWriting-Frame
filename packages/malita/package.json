@@ -6,7 +6,8 @@
   "scripts": {
     "malita": "node ./bin/malita.js",
     "build": "esbuild ./src/** --bundle --outdir=dist --platform=node --external:esbuild",
-    "watch": "pnpm build -- --watch"
+    "watch": "pnpm build -- --watch",
+    "compiled": "node ./bin/compiled.js"
   },
   "bin": {
     "malita": "./bin/malita.js"

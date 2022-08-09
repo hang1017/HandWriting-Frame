@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",
+    "@types/minimist": "^1.2.2",
     "@types/ws": "^8.5.3",
     "esbuild": "^0.14.49",
     "react-router": "^6.3.0",
@@ -32,6 +33,7 @@
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",
     "http-proxy-middleware": "^2.0.6",
+    "minimist": "^1.2.6",
     "ws": "^8.8.1"
   }
 }

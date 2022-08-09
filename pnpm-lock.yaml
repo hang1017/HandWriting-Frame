@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@types/fs-extra': ^9.0.13
       '@types/glob': ^7.2.0
+      '@types/minimist': ^1.2.2
       '@types/react-router': ^5.1.18
       '@types/react-router-dom': ^5.3.3
       '@types/ws': ^8.5.3
@@ -13,6 +14,7 @@ importers:
       fs-extra: ^10.1.0
       glob: ^8.0.3
       http-proxy-middleware: ^2.0.6
+      minimist: ^1.2.6
       react-router: ^6.3.0
       react-router-dom: ^6.3.0
       tsc: ^2.0.4
@@ -24,10 +26,12 @@ importers:
       fs-extra: 10.1.0
       glob: 8.0.3
       http-proxy-middleware: 2.0.6
+      minimist: 1.2.6
       ws: 8.8.1
     devDependencies:
       '@types/fs-extra': 9.0.13
       '@types/glob': 7.2.0
+      '@types/minimist': 1.2.2
       '@types/ws': 8.5.3
       esbuild: 0.14.49
       react-router: 6.3.0
@@ -261,6 +265,10 @@ packages:
 
   /@types/minimatch/3.0.5:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
+    dev: true
+
+  /@types/minimist/1.2.2:
+    resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
   /@types/node/18.0.6:
