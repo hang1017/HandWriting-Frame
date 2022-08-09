@@ -47,6 +47,8 @@ const getRouteHtml = ({
     import ReactDOM from "react-dom/client";
     import { HashRouter, Route, Routes } from "react-router-dom";
     import KeepAliveLayout from "@malitajs/keepalive";
+    // import '${path.resolve(__dirname, "hd")}';
+    
     ${impStr}
     const Hello = () => {
       const [text, setText] = React.useState("Hi~, click me1231");

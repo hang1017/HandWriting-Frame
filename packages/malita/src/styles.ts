@@ -1,6 +1,9 @@
 import type { PluginBuild, OnResolveArgs, OnLoadArgs } from "esbuild";
 import { build } from "esbuild";
 import path from "path";
+import postcss from "postcss";
+// @ts-ignore
+import pxtorem from "@alitajs/postcss-plugin-px2rem";
 
 export const styles = () => {
   return {
@@ -72,6 +75,15 @@ export const styles = () => {
           write: false,
           charset: "utf8",
         });
+
+        // const processedCss = postcss(
+        //   pxtorem({
+        //     selectorDoubleRemList: [/.ant-/, /.adm-/, /.am-/],
+        //     rootValue: 100,
+        //     minPixelValue: 2,
+        //   })
+        // ).process(outputFiles[0].text).css;
+
         return {
           contents: outputFiles[0].text,
           errors,

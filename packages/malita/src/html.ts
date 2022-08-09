@@ -7,7 +7,7 @@ import { DEFAULT_POST, DEFAULT_HOST, DEFAULT_OUTPUT, DEFAULT_FRAMEWORK_NAME } fr
 const htmls = ({ config }: { config: ConfigProps }) => {
   return `
   <!DOCTYPE html>
-  <html>
+  <html  data-scale="true">
       <head>
       <title>${config?.title || "malita"}</title>
         <meta charset="UTF-8">

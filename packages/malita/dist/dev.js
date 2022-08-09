@@ -27396,7 +27396,7 @@ var require_debug2 = __commonJS({
     module2.exports = function() {
       if (!debug) {
         try {
-          debug = require("debug")("follow-redirects");
+          debug = require_src()("follow-redirects");
         } catch (error) {
         }
         if (typeof debug !== "function") {
@@ -34218,6 +34218,8 @@ var getRouteHtml = ({
     import ReactDOM from "react-dom/client";
     import { HashRouter, Route, Routes } from "react-router-dom";
     import KeepAliveLayout from "@malitajs/keepalive";
+    // import '${import_path4.default.resolve(__dirname, "hd")}';
+    
     ${impStr}
     const Hello = () => {
       const [text, setText] = React.useState("Hi~, click me1231");
@@ -34261,7 +34263,7 @@ var import_fs_extra3 = __toESM(require_lib3());
 var htmls = ({ config }) => {
   return `
   <!DOCTYPE html>
-  <html>
+  <html  data-scale="true">
       <head>
       <title>${(config == null ? void 0 : config.title) || "malita"}</title>
         <meta charset="UTF-8">
