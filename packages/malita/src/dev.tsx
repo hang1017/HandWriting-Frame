@@ -1,4 +1,4 @@
-import express from "express";
+import express from "../compiled/express";
 import { build } from "esbuild";
 import path from "path";
 import { createServer } from "http";

@@ -30,6 +30,8 @@
   "dependencies": {
     "@types/react-router": "^5.1.18",
     "@types/react-router-dom": "^5.3.3",
+    "@vercel/ncc": "^0.34.0",
+    "esno": "^0.16.3",
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",
     "http-proxy-middleware": "^2.0.6",

@@ -7,7 +7,7 @@
     "malita": "node ./bin/malita.js",
     "build": "esbuild ./src/** --bundle --outdir=dist --platform=node --external:esbuild",
     "watch": "pnpm build -- --watch",
-    "compiled": "node ./bin/compiled.js"
+    "compiled": "pnpm esno ./scripts/compiled.ts"
   },
   "bin": {
     "malita": "./bin/malita.js"
