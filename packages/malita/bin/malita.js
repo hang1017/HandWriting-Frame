@@ -20,4 +20,18 @@ program
     dev();
   });
 
+program
+  .command("generate")
+  .alias("g")
+  .description("微生成器")
+  .action((_name, other) => {
+    const { args } = other;
+    if (args && !!args.length) {
+      const { generate } = require("../dist/generate");
+      generate(args[1]);
+    } else {
+      console.error("cli format error");
+    }
+  });
+
 program.parse();

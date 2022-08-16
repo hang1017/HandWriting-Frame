@@ -23,7 +23,7 @@ export const dev = async () => {
 
   const { send } = createSocketServer(malitaServer);
 
-  app.get("/", function (_req, res, next) {
+  app.get("/", function (_req: any, res: any, next: any) {
     res.set("Content-Type", "text/html");
     const htmlPath = path.join(output, "index.html");
     if (existsSync(htmlPath)) {
