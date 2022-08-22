@@ -1,41 +1,30 @@
 {
-  "name": "@examples/app",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "aa": "malita",
-    "mv": "malita -v",
-    "mh": "malita help",
-    "oldBuild": "esbuild ./src/** --bundle --outdir=www ",
-    "dev": "malita dev",
-    "serve": "cd www && serve"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
-  },
-  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
-  "dependencies": {
-    "@babel/standalone": "^7.18.9",
-    "@malitajs/keepalive": "workspace:*",
-    "antd-mobile": "^5.20.0",
-    "malita": "workspace:*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router": "^6.3.0",
-    "react-router-dom": "^6.3.0",
-    "serve": "^14.0.1"
-  },
-  "description": "",
-  "devDependencies": {
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
-    "@types/react-router": "^5.1.18",
-    "@types/react-router-dom": "^5.3.3"
-  }
+    "name": "@examples/app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "malita build",
+        "dev": "malita dev",
+        "g": "malita g",
+        "serve": "cd dist && serve"
+    },
+    "keywords": [],
+    "author": "",
+    "dependencies": {
+        "@alita/flow": "^3.0.0-beta.5",
+        "@malitajs/keepalive": "workspace:*",
+        "antd-mobile": "^5.11.2",
+        "antd-mobile-icons": "^0.2.2",
+        "lorem-ipsum": "^2.0.4",
+        "malita": "workspace:*",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "react-router": "^6.3.0",
+        "react-router-dom": "^6.3.0"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "serve": "^13.0.2"
+    }
 }

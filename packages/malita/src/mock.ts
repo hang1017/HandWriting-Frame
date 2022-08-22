@@ -1,113 +1,81 @@
-import glob from "glob";
-import { build } from "esbuild";
-import path from "path";
-import { Request, Response } from "express";
-import type { Express } from "express";
-import { readdirSync, existsSync } from "fs-extra";
-import { Server } from "http";
-import type { AppDataProps } from "./appData";
+import { existsSync } from 'fs';
+import path from 'path';
+import type { Server } from 'http';
+import { Plugin, build } from 'esbuild';
+import glob from '../compiled/glob';
+import type { AppData } from './appData';
 
-const cleanRequireCache = (absMockPath: string) => {
-  Object.keys(require.cache).forEach((item) => {
-    if (item.indexOf(absMockPath) !== -1) delete require.cache[item];
-  });
-};
-
-const getMethod = (str: string) => {
-  const list = str.split(" ");
-  if (list && list.length === 2) {
-    return {
-      method: list[0],
-      url: list[1],
-    };
-  }
-  return {
-    method: "GET",
-    url: str,
-  };
-};
-
-const dataStructure = async (mockFile: string) => {
-  const POST = {} as Record<string, any>;
-  const GET = {} as Record<string, any>;
-  let files = readdirSync(mockFile);
-  files.forEach((item) => {
-    const filePath = path.join(mockFile, item);
-    delete require.cache[filePath];
-    const mock = require(filePath).default;
-    Object.entries(mock || {}).forEach(([key, obj]: [string, any]) => {
-      const { method, url } = getMethod(key);
-      if (method === "GET") {
-        GET[url] = obj;
-      } else {
-        POST[url] = obj;
-      }
+function cleanRequireCache(absMockPath: string) {
+    Object.keys(require.cache).forEach(file => {
+        if (file.indexOf(absMockPath) > -1) {
+            delete require.cache[file];
+        }
     });
-  });
+}
 
-  return { POST, GET };
-};
-
-export const getMock = async ({
-  appData,
-  malitaServer,
-  app,
-}: {
-  appData: AppDataProps;
-  malitaServer: Server;
-  app: Express;
-}) => {
-  return new Promise((resolve: (res: boolean) => void, reject) => {
-    try {
-      glob("mock/**.ts", { absolute: true }, async function (er, files) {
-        const mockFile = path.join(appData.paths.absTempPath, "mock");
-        if (er) {
-          resolve(false);
-          return;
+function normalizeConfig(config: any) {
+    return Object.keys(config).reduce((memo: any, key) => {
+        const handler = config[key];
+        const type = typeof handler;
+        if (type !== 'function' && type !== 'object') {
+            return memo;
         }
-        await build({
-          bundle: true,
-          external: ["esbuild"],
-          outdir: mockFile,
-          entryPoints: files,
-          format: "cjs",
-          logLevel: "error",
-          charset: "utf8",
-          define: {
-            "process.env.NODE_ENV": JSON.stringify("development"),
-          },
-          watch: {
-            onRebuild: (err) => {
-              if (err) {
-                console.log(err);
-                return;
-              }
-              malitaServer.emit("REBUILD", { appData });
-            },
-          },
+        const req = key.split(' ');
+        const method = req[0];
+        const url = req[1];
+        if (!memo[method]) memo[method] = {};
+        memo[method][url] = handler;
+        return memo;
+    }, {});
+}
+
+export const getMockConfig = ({ appData, malitaServe }: { appData: AppData; malitaServe: Server; }) => {
+    return new Promise(async (resolve: (value: any) => void, rejects) => {
+        let config = {};
+        const mockDir = path.resolve(appData.paths.cwd, 'mock');
+        const mockFiles = glob.sync('**/*.ts', {
+            cwd: mockDir,
         });
-
-        if (existsSync(mockFile)) {
-          cleanRequireCache(mockFile);
-          const mockData = (await dataStructure(mockFile)) as any;
-          app.use((req: Request, res: Response, next) => {
-            const mockConfig = mockData?.[req.method]?.[req.url];
-            const result = Object.prototype.toString.call(mockConfig);
-            if (
-              result === "[object Array]" ||
-              result === "[object String]" ||
-              result === "[object Object]"
-            ) {
-              res.json(mockConfig);
-            } else if (result === "[object Function]") {
-              mockConfig(req, res);
-            } else next();
-          });
+        const ret = mockFiles.map((memo) => {
+            return path.join(mockDir, memo);
+        });
+        const mockOutDir = path.resolve(appData.paths.absTmpPath, 'mock');
+        await build({
+            format: 'cjs',
+            logLevel: 'error',
+            outdir: mockOutDir,
+            bundle: true,
+            watch: {
+                onRebuild: (err, res) => {
+                    if (err) {
+                        console.error(JSON.stringify(err));
+                        return;
+                    }
+                    malitaServe.emit('REBUILD', { appData });
+                }
+            },
+            define: {
+                'process.env.NODE_ENV': JSON.stringify('development'),
+            },
+            external: ['esbuild'],
+            entryPoints: ret,
+        });
+        try {
+            const outMockFiles = glob.sync('**/*.js', {
+                cwd: mockOutDir,
+            });
+            cleanRequireCache(mockOutDir);
+            config = outMockFiles.reduce((memo, mockFile) => {
+                memo = {
+                    ...memo,
+                    ...require(path.resolve(mockOutDir, mockFile)).default,
+                };
+                return memo;
+            }, {});
+        } catch (error) {
+            console.error('getMockConfig error', error);
+            rejects(error);
         }
-      });
-      resolve(true);
-    } catch (e) {
-      reject(false);
-    }
-  });
-};
+        resolve(normalizeConfig(config));
+    })
+}

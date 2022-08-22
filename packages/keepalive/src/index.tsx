@@ -1,90 +1,62 @@
-import { useRef, useContext } from "react";
-import { useLocation, useOutlet } from "react-router-dom";
-import { KeepaliveContext } from "./context";
+import React, { useRef, createContext, useContext } from 'react';
+import { useOutlet, useLocation, matchPath } from 'react-router-dom'
+import type { FC } from 'react';
 
-const isKeepPath = (path: string, list: (string | RegExp)[]) => {
-  let flag = false;
-  list.forEach((item) => {
-    if (typeof item === "string" && item === path) {
-      flag = true;
-    }
-    if (item instanceof RegExp && item.test(path)) {
-      flag = true;
-    }
-    if (typeof item === "string" && item === path.toLocaleLowerCase()) {
-      flag = true;
-    }
-  });
-  return flag;
-};
+export const KeepAliveContext = createContext<KeepAliveLayoutProps>({ keepalive: [], keepElements: {} });
 
-export const useOutletContent = () => {
-  const { keepElements, keepalive = [] } = useContext(KeepaliveContext);
-  const location = useLocation();
-  const ele = useOutlet();
-  const { pathname = "" } = location;
-  const isKeepFlag = isKeepPath(pathname, keepalive);
-
-  if (isKeepFlag && !keepElements.current[pathname]) {
-    keepElements.current[pathname] = ele;
-  }
-  const elements = (
-    <>
-      {Object.entries(keepElements.current).map(
-        ([path, element]: [string, any]) => {
-          return (
-            <div
-              className="malita-keep-layout"
-              key={path}
-              style={{
-                height: "100%",
-                width: "100%",
-                position: "relative",
-                overflow: "hidden auto",
-              }}
-              hidden={path !== pathname}
-            >
-              {element}
-            </div>
-          );
+const isKeepPath = (aliveList: any[], path: string) => {
+    let isKeep = false;
+    aliveList.map(item => {
+        if (item === path) {
+            isKeep = true;
         }
-      )}
-      {!isKeepFlag && (
-        <div
-          style={{
-            height: "100%",
-            width: "100%",
-            position: "relative",
-            overflow: "hidden auto",
-          }}
-          className="malita-keep-layout-no"
-        >
-          {ele}
+        if (item instanceof RegExp && item.test(path)) {
+            isKeep = true;
+        }
+        if (typeof item === 'string' && item.toLowerCase() === path) {
+            isKeep = true;
+        }
+    })
+    return isKeep;
+}
+
+export function useKeepOutlets() {
+    const location = useLocation();
+    const element = useOutlet();
+    const { keepElements, keepalive } = useContext<any>(KeepAliveContext);
+    const isKeep = isKeepPath(keepalive, location.pathname);
+    if (isKeep) {
+        keepElements.current[location.pathname] = element;
+    }
+    return <>
+        {
+            Object.entries(keepElements.current).map(([pathname, element]: any) => (
+                <div key={pathname} style={{ height: '100%', width: '100%', position: 'relative', overflow: 'hidden auto' }} className="rumtime-keep-alive-layout" hidden={!matchPath(location.pathname, pathname)}>
+                    {element}
+                </div>
+            ))
+        }
+        <div hidden={isKeep} style={{ height: '100%', width: '100%', position: 'relative', overflow: 'hidden auto' }} className="rumtime-keep-alive-layout-no">
+            {!isKeep && element}
         </div>
-      )}
     </>
-  );
+}
 
-  return elements;
-};
+interface KeepAliveLayoutProps {
+    keepalive: any[];
+    keepElements?: any;
+    dropByCacheKey?: (path: string) => void;
+}
 
-const KeepAliveLayout = (props: any) => {
-  const { keepalive = [], ...otherProps } = props;
-
-  const keepElements = useRef<Record<string, any>>({});
-
-  const dorpByCacheKey = (path: string) => {
-    delete keepElements.current[path];
-  };
-
-  return (
-    <KeepaliveContext.Provider
-      value={{ keepalive, keepElements, dorpByCacheKey }}
-      {...otherProps}
-    />
-  );
-};
-
-export { KeepaliveContext };
+const KeepAliveLayout: FC<KeepAliveLayoutProps> = (props) => {
+    const { keepalive, ...other } = props;
+    const keepElements = React.useRef<any>({})
+    function dropByCacheKey(path: string) {
+        keepElements.current[path] = null;
+    }
+    return (
+        <KeepAliveContext.Provider value={{ keepalive, keepElements, dropByCacheKey }} {...other} />
+    )
+}
 
 export default KeepAliveLayout;

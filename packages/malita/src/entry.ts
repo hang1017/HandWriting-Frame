@@ -1,91 +1,76 @@
-import { ensureDirSync, writeFile } from "fs-extra";
-import path from "path";
-import type { AppDataProps } from "./appData";
-import type { RouteProps } from "./router";
-import type { ConfigProps } from "./config";
+import { mkdir, writeFileSync } from 'fs';
+import path from 'path';
+import { winPath } from '@umijs/utils';
+import type { AppData } from './appData';
+import type { IRoute } from './routes';
+import type { UserConfig } from './config';
 
-const getRouteText = (router: RouteProps[], index: number) => {
-  let i = 0;
-  let impStr = "";
-  let rouStr = "";
-  router.forEach((item: RouteProps) => {
-    i += 1;
-    impStr += `import A${index}${i} from "${item.element}";\n`;
-    rouStr += `<Route path="${item.path}" element={<A${index}${i} />}>\n`;
-    if (item?.children) {
-      const { impStr: is, rouStr: rs } = getRouteText(item?.children, index + 1);
-      impStr += is;
-      rouStr += rs;
-    }
-    rouStr += `</Route>\n`;
-  });
-  return { impStr, rouStr };
+let count = 1;
+const getRouteStr = (routes: IRoute[]) => {
+    let routesStr = '';
+    let importStr = '';
+    routes.forEach(route => {
+        count += 1;
+        importStr += `import A${count} from '${winPath(route.element)}';\n`;
+        routesStr += `\n<Route path='${route.path}' element={<A${count} />}>`;
+        if (route.routes) {
+            const { routesStr: rs, importStr: is } = getRouteStr(route.routes);
+            routesStr += rs;
+            importStr += is;
+        }
+        routesStr += '</Route>\n';
+    })
+    return { routesStr, importStr };
+}
+
+const configStringify = (config: (string | RegExp)[]) => {
+    return config.map((item) => {
+        if (item instanceof RegExp) {
+            return item;
+        }
+        return `'${item}'`;
+    });
 };
 
-const configStringify = (keepalive: (string | RegExp)[]) => {
-  return (keepalive || []).map((item) => {
-    if (item instanceof RegExp) {
-      return item;
-    }
-    return `'${item}'`;
-  });
-};
+export const generateEntry = ({ appData, routes, userConfig }: { appData: AppData; routes: IRoute[]; userConfig: UserConfig }) => {
+    return new Promise((resolve, rejects) => {
+        count = 0;
+        const { routesStr, importStr } = getRouteStr(routes);
+        const content = `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { HashRouter, Routes, Route, } from 'react-router-dom';
+import KeepAliveLayout from '@malitajs/keepalive';
+import '${path.resolve(__dirname, 'hd')}';
+${importStr}
 
-const getRouteHtml = ({
-  impStr,
-  rouStr,
-  config,
-}: {
-  impStr: string;
-  rouStr: string;
-  config: ConfigProps;
-}) => {
-  const { keepalive = [] } = config;
-
-  return `
-    import React from "react";
-    import ReactDOM from "react-dom/client";
-    import { HashRouter, Route, Routes } from "react-router-dom";
-    import KeepAliveLayout from "@malitajs/keepalive";
-    // import '${path.resolve(__dirname, "hd")}';
-    
-    ${impStr}
-    const Hello = () => {
-      const [text, setText] = React.useState("Hi~, click me1231");
-      return (
-        <KeepAliveLayout keepalive={[${configStringify(keepalive)}]}>
-          <HashRouter>
-            <div onClick={() => setText("Malita")}>{text}</div>
-            <Routes>
-              ${rouStr}
-            </Routes>
-          </HashRouter>
+const App = () => {
+    return (
+        <KeepAliveLayout keepalive={[${configStringify(
+            userConfig?.keepalive ?? [],
+        )}]}>
+            <HashRouter>
+                <Routes>
+                    ${routesStr}
+                </Routes>
+            </HashRouter>
         </KeepAliveLayout>
-      );
-    };
-    // @ts-ignore
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(React.createElement(Hello));
-  `;
-};
+    );
+}
 
-export const getEnrty = async ({
-  appData,
-  router,
-  config,
-}: {
-  appData: AppDataProps;
-  router: RouteProps[];
-  config: ConfigProps;
-}) => {
-  return new Promise((resolve: (res: boolean) => void, reject) => {
-    try {
-      const text = getRouteText(router, 0);
-      const content = getRouteHtml({ ...text, config });
-      ensureDirSync(appData.paths.absTempPath);
-      writeFile(path.join(appData.paths.absEntryPointPath), content, "utf-8");
-      resolve(true);
-    } catch (e) {}
-    reject(false);
-  });
-};
+const root = ReactDOM.createRoot(document.getElementById('malita'));
+root.render(React.createElement(App));
+    `;
+        try {
+            mkdir(path.dirname(appData.paths.absEntryPath), { recursive: true }, (err) => {
+                if (err) {
+                    rejects(err)
+                }
+                writeFileSync(appData.paths.absEntryPath, content, 'utf-8');
+                resolve({})
+            });
+        } catch (error) {
+            rejects({})
+        }
+    })
+}

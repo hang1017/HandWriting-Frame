@@ -1,29 +1,42 @@
-import type { Server } from "http";
-import { WebSocketServer } from "ws";
+import { Server as HttpServer } from 'http';
+import { WebSocketServer } from '../compiled/ws';
 
-export const createSocketServer = (server: Server) => {
-  const wss = new WebSocketServer({ noServer: true });
+export function createWebSocketServer(server: HttpServer) {
+    const wss = new WebSocketServer({
+        noServer: true,
+    });
 
-  server.on("upgrade", function upgrade(request, socket, head) {
-    if (request.headers["sec-websocket-protocol"] === "malita_hmr") {
-      wss.handleUpgrade(request, socket, head, function done(ws) {
-        wss.emit("connection", ws, request);
-      });
-    }
-  });
-
-  wss.on("connection", function connection(ws) {
-    ws.send(JSON.stringify({ type: "connected" }));
-  });
-
-  return {
-    wss,
-    send: ({ type }: { type: string }) => {
-      wss.clients.forEach(function each(client) {
-        if (client.readyState === 1) {
-          client.send(JSON.stringify({ type }));
+    server.on('upgrade', (req, socket, head) => {
+        if (req.headers['sec-websocket-protocol'] === 'malita-hmr') {
+            wss.handleUpgrade(req, socket as any, head, (ws) => {
+                wss.emit('connection', ws, req);
+            });
         }
-      });
-    },
-  };
-};
+    });
+
+    wss.on('connection', (socket) => {
+        socket.send(JSON.stringify({ type: 'connected' }));
+    });
+
+    wss.on('error', (e: Error & { code: string }) => {
+        if (e.code !== 'EADDRINUSE') {
+            console.error(
+                `WebSocket server error:\n${e.stack || e.message}`,
+            );
+        }
+    });
+
+    return {
+        send(message: string) {
+            wss.clients.forEach((client) => {
+                if (client.readyState === 1) {
+                    client.send(message);
+                }
+            });
+        },
+        wss,
+        close() {
+            wss.close();
+        },
+    };
+}

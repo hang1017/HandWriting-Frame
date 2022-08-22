@@ -1,44 +1,40 @@
-import path from "path";
-import { ensureDirSync, writeFile } from "fs-extra";
-import type { AppDataProps } from "./appData";
-import type { ConfigProps } from "./config";
-import { DEFAULT_POST, DEFAULT_HOST, DEFAULT_OUTPUT, DEFAULT_FRAMEWORK_NAME } from "./contants";
+import { mkdir, writeFileSync } from 'fs';
+import path from 'path';
+import type { AppData } from './appData';
+import { DEFAULT_FRAMEWORK_NAME, DEFAULT_OUTDIR } from './constants';
+import type { UserConfig } from './config';
 
-const htmls = ({ config }: { config: ConfigProps }) => {
-  return `
-  <!DOCTYPE html>
-  <html  data-scale="true">
-      <head>
-      <title>${config?.title || "malita"}</title>
-        <meta charset="UTF-8">
-      </head>
-      <body>
-          <div id="root">
-              <div>loading...</div>
-          </div>
-
-          <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/${DEFAULT_OUTPUT}/${DEFAULT_FRAMEWORK_NAME}.js"></script>
-          <script src="http://${DEFAULT_HOST}:${DEFAULT_POST}/client/index.js"></script>
-      </body>
-  </html>
-  `;
-};
-
-export const getHtml = async ({
-  appData,
-  config,
-}: {
-  appData: AppDataProps;
-  config: ConfigProps;
-}) => {
-  return new Promise((resolve: (res: boolean) => void, reject) => {
-    try {
-      const content = htmls({ config });
-      ensureDirSync(appData.paths.absOutputPath);
-      writeFile(path.join(appData.paths.absOutputPath, "index.html"), content, "utf-8");
-      resolve(true);
-    } catch (e) {
-      reject();
-    }
-  });
-};
+export const generateHtml = ({ appData, userConfig, isProduction = false }: { appData: AppData; userConfig: UserConfig; isProduction?: boolean; }) => {
+    return new Promise((resolve, rejects) => {
+        const title = userConfig?.title ?? appData.pkg.name ?? 'Malita';
+        const content = `
+        <!DOCTYPE html>
+        <html lang="en">
+        
+        <head>
+            <meta charset="UTF-8">
+            <title>${title}</title>
+        </head>
+        
+        <body>
+            <div id="malita">
+                <span>loading...</span>
+            </div>
+            <script src="${isProduction ? '.' : `/${DEFAULT_OUTDIR}`}/${DEFAULT_FRAMEWORK_NAME}.js"></script>
+            ${isProduction ? '' : '<script src="/malita/client.js"></script>'}
+        </body>
+        </html>`;
+        try {
+            const htmlPath = path.resolve(appData.paths.absOutputPath, 'index.html')
+            mkdir(path.dirname(htmlPath), { recursive: true }, (err) => {
+                if (err) {
+                    rejects(err)
+                }
+                writeFileSync(htmlPath, content, 'utf-8');
+                resolve({})
+            });
+        } catch (error) {
+            rejects({})
+        }
+    })
+}
