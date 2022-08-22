@@ -1,24 +1,24 @@
 {
-    "private": true,
-    "scripts": {
-        "hello": "malita"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/xiaohuoni/malita.git"
-    },
-    "keywords": [],
-    "author": "xiaohuoni",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/xiaohuoni/malita/issues"
-    },
-    "homepage": "https://github.com/xiaohuoni/malita#readme",
-    "dependencies": {
-        "babel-standalone": "^6.26.0",
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0"
-    },
-    "devDependencies": {},
-    "description": ""
+  "private": true,
+  "scripts": {
+    "hello": "peony"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
+  },
+  "keywords": [],
+  "author": "xiaohuoni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
+  },
+  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
+  "dependencies": {
+    "babel-standalone": "^6.26.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {},
+  "description": ""
 }

@@ -1,30 +1,30 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 export default {
-  'GET /mock/hello': {
-    text: 'Malita',
+  "GET /mock/hello": {
+    text: "peony",
   },
-  'POST /mock/list': (req: Request, res: Response) => {
+  "POST /mock/list": (req: Request, res: Response) => {
     const dataSource = [
       {
         id: 1,
-        title: 'Title 1',
+        title: "Title 1",
       },
       {
         id: 2,
-        title: 'Title 2',
+        title: "Title 2",
       },
       {
         id: 3,
-        title: 'Title 3',
+        title: "Title 3",
       },
       {
         id: 4,
-        title: 'Title 4',
+        title: "Title 4",
       },
       {
         id: 5,
-        title: 'Title 5',
+        title: "Title 5",
       },
     ];
     const { body } = req;

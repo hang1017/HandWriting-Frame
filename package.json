@@ -2,21 +2,21 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r --filter ./packages run build",
-    "build:client": "cd packages && cd malita && pnpm run build:client",
-    "build:deps": "cd packages && cd malita && pnpm run build:deps",
+    "build:client": "cd packages && cd peony && pnpm run build:client",
+    "build:deps": "cd packages && cd peony && pnpm run build:deps",
     "dev": "pnpm -r --filter ./packages --parallel run dev"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaohuoni/malita.git"
+    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
   },
   "keywords": [],
   "author": "xiaohuoni",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xiaohuoni/malita/issues"
+    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
   },
-  "homepage": "https://github.com/xiaohuoni/malita#readme",
+  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.13",
