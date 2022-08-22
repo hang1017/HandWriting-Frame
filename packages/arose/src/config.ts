@@ -13,11 +13,11 @@ export interface UserConfig {
 }
 export const getUserConfig = ({
   appData,
-  peonyServe,
+  aroseServe,
   isProduction = false,
 }: {
   appData: AppData;
-  peonyServe?: Server;
+  aroseServe?: Server;
   isProduction?: boolean;
 }) => {
   return new Promise(async (resolve: (value: UserConfig) => void, rejects) => {
@@ -38,7 +38,7 @@ export const getUserConfig = ({
                   console.error(JSON.stringify(err));
                   return;
                 }
-                peonyServe?.emit("REBUILD", { appData });
+                aroseServe?.emit("REBUILD", { appData });
               },
             },
         define: {
@@ -48,7 +48,7 @@ export const getUserConfig = ({
         entryPoints: [configFile],
       });
       try {
-        const configFile = path.resolve(appData.paths.absOutputPath, "peony.config.js");
+        const configFile = path.resolve(appData.paths.absOutputPath, "arose.config.js");
         delete require.cache[configFile];
         config = require(configFile).default;
       } catch (error) {

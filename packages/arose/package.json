@@ -1,9 +1,9 @@
 {
-  "name": "peony",
+  "name": "arose",
   "version": "0.0.1",
   "main": "lib/index.js",
   "bin": {
-    "peony": "bin/peony.js"
+    "arose": "bin/arose.js"
   },
   "scripts": {
     "build": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild --loader:.node=file",

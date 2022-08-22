@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Page, Content, Header, Footer } from "@alita/flow";
-import { useKeepOutlets } from "@peonyjs/keepalive";
+import { useKeepOutlets } from "@arosejs/keepalive";
 import { Badge, TabBar, NavBar } from "antd-mobile";
 import { AppOutline, UnorderedListOutline } from "antd-mobile-icons";
 import "./index.css";
@@ -30,7 +30,7 @@ const Layout = () => {
   };
   const [activeKey, setActiveKey] = useState(pathname);
   return (
-    <Page className="peony-layout">
+    <Page className="arose-layout">
       <Header>
         <NavBar>{titleHash[activeKey]}</NavBar>
       </Header>

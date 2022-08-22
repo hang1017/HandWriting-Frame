@@ -1,17 +1,17 @@
-# @peonyjs/keepalive
+# @arosejs/keepalive
 
 react 中的状态保持组件
 
 ## 安装
 
 ```bash
-yarn add @peonyjs/keepalive
+yarn add @arosejs/keepalive
 ```
 
 ## 使用
 
 ```tsx
-import KeepAliveLayout, { useKeepOutlets, KeepAliveContext } from "@peony/keepalive";
+import KeepAliveLayout, { useKeepOutlets, KeepAliveContext } from "@arose/keepalive";
 import { useLocation } from "react-router-dom";
 import React, { useState, useContext } from "react";
 

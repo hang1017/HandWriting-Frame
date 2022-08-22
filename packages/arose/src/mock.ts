@@ -31,10 +31,10 @@ function normalizeConfig(config: any) {
 
 export const getMockConfig = ({
   appData,
-  peonyServe,
+  aroseServe,
 }: {
   appData: AppData;
-  peonyServe: Server;
+  aroseServe: Server;
 }) => {
   return new Promise(async (resolve: (value: any) => void, rejects) => {
     let config = {};
@@ -57,7 +57,7 @@ export const getMockConfig = ({
             console.error(JSON.stringify(err));
             return;
           }
-          peonyServe.emit("REBUILD", { appData });
+          aroseServe.emit("REBUILD", { appData });
         },
       },
       define: {

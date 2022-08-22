@@ -1,10 +1,10 @@
 export const DEFAULT_OUTDIR = "dist";
-export const DEFAULT_ENTRY_POINT = "peony.tsx";
-export const DEFAULT_TEMPLATE = ".peony";
+export const DEFAULT_ENTRY_POINT = "arose.tsx";
+export const DEFAULT_TEMPLATE = ".arose";
 export const DEFAULT_GLOBAL_LAYOUTS = "layouts/index.tsx";
-export const DEFAULT_FRAMEWORK_NAME = "peony";
+export const DEFAULT_FRAMEWORK_NAME = "arose";
 export const DEFAULT_PLATFORM = "browser";
 export const DEFAULT_HOST = "127.0.0.1";
 export const DEFAULT_PORT = 8888;
 export const DEFAULT_BUILD_PORT = 6677;
-export const DEFAULT_CONFIG_FILE = "peony.config.ts";
+export const DEFAULT_CONFIG_FILE = "arose.config.ts";

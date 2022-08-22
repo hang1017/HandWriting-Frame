@@ -7,7 +7,7 @@ export function createWebSocketServer(server: HttpServer) {
   });
 
   server.on("upgrade", (req, socket, head) => {
-    if (req.headers["sec-websocket-protocol"] === "peony-hmr") {
+    if (req.headers["sec-websocket-protocol"] === "arose-hmr") {
       wss.handleUpgrade(req, socket as any, head, (ws) => {
         wss.emit("connection", ws, req);
       });

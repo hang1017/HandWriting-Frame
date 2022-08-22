@@ -36,10 +36,10 @@ export const dev = async () => {
   });
 
   app.use(`/${DEFAULT_OUTDIR}`, express.static(output));
-  app.use(`/peony`, express.static(path.resolve(__dirname, "client")));
+  app.use(`/arose`, express.static(path.resolve(__dirname, "client")));
 
-  const peonyServe = createServer(app);
-  const ws = createWebSocketServer(peonyServe);
+  const aroseServe = createServer(app);
+  const ws = createWebSocketServer(aroseServe);
 
   function sendMessage(type: string, data?: any) {
     ws.send(JSON.stringify({ type, data }));
@@ -48,11 +48,11 @@ export const dev = async () => {
     // 获取用户数据
     const userConfig = await getUserConfig({
       appData,
-      peonyServe,
+      aroseServe,
     });
     const mockConfig = await getMockConfig({
       appData,
-      peonyServe,
+      aroseServe,
     });
 
     app.use((req, res, next) => {
@@ -88,11 +88,11 @@ export const dev = async () => {
       });
     }
   };
-  peonyServe.on("REBUILD", async ({ appData }) => {
+  aroseServe.on("REBUILD", async ({ appData }) => {
     await buildMain({ appData });
     sendMessage("reload");
   });
-  peonyServe.listen(port, async () => {
+  aroseServe.listen(port, async () => {
     console.log(`App listening at http://${DEFAULT_HOST}:${port}`);
     try {
       // 生命周期
@@ -122,7 +122,7 @@ export const dev = async () => {
         define: {
           "process.env.NODE_ENV": JSON.stringify("development"),
         },
-        external: ["esbuild", "peony"],
+        external: ["esbuild", "arose"],
         plugins: [style()],
         entryPoints: [appData.paths.absEntryPath],
       });
@@ -134,5 +134,5 @@ export const dev = async () => {
     }
   });
 
-  return peonyServe;
+  return aroseServe;
 };

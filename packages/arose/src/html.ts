@@ -14,7 +14,7 @@ export const generateHtml = ({
   isProduction?: boolean;
 }) => {
   return new Promise((resolve, rejects) => {
-    const title = userConfig?.title ?? appData.pkg.name ?? "peony";
+    const title = userConfig?.title ?? appData.pkg.name ?? "arose";
     const content = `
         <!DOCTYPE html>
         <html lang="en">
@@ -25,13 +25,13 @@ export const generateHtml = ({
         </head>
         
         <body>
-            <div id="peony">
+            <div id="arose">
                 <span>loading...</span>
             </div>
             <script src="${
               isProduction ? "." : `/${DEFAULT_OUTDIR}`
             }/${DEFAULT_FRAMEWORK_NAME}.js"></script>
-            ${isProduction ? "" : '<script src="/peony/client.js"></script>'}
+            ${isProduction ? "" : '<script src="/arose/client.js"></script>'}
         </body>
         </html>`;
     try {

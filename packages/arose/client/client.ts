@@ -5,12 +5,12 @@ function getSocketHost() {
   return `${isHttps ? "wss" : "ws"}://${host}`;
 }
 if ("WebSocket" in window) {
-  const socket = new WebSocket(getSocketHost(), "peony-hmr");
+  const socket = new WebSocket(getSocketHost(), "arose-hmr");
   let pingTimer: NodeJS.Timer | null = null;
   socket.addEventListener("message", async ({ data }) => {
     data = JSON.parse(data);
     if (data.type === "connected") {
-      console.log(`[peony] connected.`);
+      console.log(`[arose] connected.`);
       // 心跳包
       pingTimer = setInterval(() => socket.send("ping"), 30000);
     }
@@ -20,7 +20,7 @@ if ("WebSocket" in window) {
   async function waitForSuccessfulPing(ms = 1000) {
     while (true) {
       try {
-        await fetch(`/__peony_ping`);
+        await fetch(`/__arose_ping`);
         break;
       } catch (e) {
         await new Promise((resolve) => setTimeout(resolve, ms));
@@ -30,7 +30,7 @@ if ("WebSocket" in window) {
 
   socket.addEventListener("close", async () => {
     if (pingTimer) clearInterval(pingTimer);
-    console.info("[peony] Dev server disconnected. Polling for restart...");
+    console.info("[arose] Dev server disconnected. Polling for restart...");
     await waitForSuccessfulPing();
     location.reload();
   });

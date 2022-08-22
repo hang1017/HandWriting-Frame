@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r --filter ./packages run build",
-    "build:client": "cd packages && cd peony && pnpm run build:client",
-    "build:deps": "cd packages && cd peony && pnpm run build:deps",
+    "build:client": "cd packages && cd arose && pnpm run build:client",
+    "build:deps": "cd packages && cd arose && pnpm run build:deps",
     "dev": "pnpm -r --filter ./packages --parallel run dev"
   },
   "repository": {

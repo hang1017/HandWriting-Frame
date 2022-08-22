@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 export default {
   "GET /mock/hello": {
-    text: "peony",
+    text: "arose",
   },
   "POST /mock/list": (req: Request, res: Response) => {
     const dataSource = [

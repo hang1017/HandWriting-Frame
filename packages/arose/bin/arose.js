@@ -15,14 +15,14 @@ program
   .description("帮助命令")
   .action(function (name, other) {
     console.log(`
-这是21天短文，挑战手写前端框架的产物框架 peony
+这是21天短文，挑战手写前端框架的产物框架 arose
 
 支持的命令:
   version, -v,-V 输出当前框架的版本
   help,-h 输出帮助程序
 
 Example call:
-    $ peony <command> --help`);
+    $ arose <command> --help`);
   });
 
 program

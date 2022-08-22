@@ -48,7 +48,7 @@ export const generateEntry = ({
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route, } from 'react-router-dom';
-import KeepAliveLayout from '@peonyjs/keepalive';
+import KeepAliveLayout from '@arosejs/keepalive';
 import '${path.resolve(__dirname, "hd")}';
 ${importStr}
 
@@ -64,7 +64,7 @@ const App = () => {
     );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('peony'));
+const root = ReactDOM.createRoot(document.getElementById('arose'));
 root.render(React.createElement(App));
     `;
     try {
