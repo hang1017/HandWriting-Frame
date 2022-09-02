@@ -9,4 +9,5 @@ export default {
       pathRewrite: { "^/api": "" },
     },
   },
+  headScripts: ["https://www.cmpassport.com/NumberAbility/jssdk/jssdk.min.js"],
 };

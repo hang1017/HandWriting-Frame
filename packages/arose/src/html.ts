@@ -4,6 +4,18 @@ import type { AppData } from "./appData";
 import { DEFAULT_FRAMEWORK_NAME, DEFAULT_OUTDIR } from "./constants";
 import type { UserConfig } from "./config";
 
+const getHeadScripts = (scripts: string[]) => {
+  let list: string[] = [];
+  if (scripts && !!scripts.length) {
+    scripts.forEach((item) => {
+      list.push(`
+    <script src="${item}"></script>
+    `);
+    });
+  }
+  return list;
+};
+
 export const generateHtml = ({
   appData,
   userConfig,
@@ -15,12 +27,14 @@ export const generateHtml = ({
 }) => {
   return new Promise((resolve, rejects) => {
     const title = userConfig?.title ?? appData.pkg.name ?? "arose";
+    const headScripts = getHeadScripts(userConfig?.headScripts || []);
     const content = `
         <!DOCTYPE html>
         <html lang="en">
         
         <head>
             <meta charset="UTF-8">
+            ${headScripts.join("\n")}
             <title>${title}</title>
         </head>
         

@@ -1,10 +1,10 @@
 import path from "path";
 import fs from "fs";
 import { createServer } from "http";
-import { createProxyMiddleware } from "../compiled/http-proxy-middleware";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import express from "../compiled/express";
 import { build } from "esbuild";
-import portfinder from "../compiled/portfinder";
+import portfinder from "portfinder";
 import { DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST } from "./constants";
 import { createWebSocketServer } from "./server";
 import { style } from "./styles";
