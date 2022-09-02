@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "antd-mobile";
-import { useOutletContent } from "@arosejs/keepalive";
+import { useKeepOutlets } from "@arosejs/keepalive";
 import "./index.css";
 
 const Layout = () => {
@@ -15,7 +15,7 @@ const Layout = () => {
         </div>
         {text}layouts, 当前路由：{pathname}
       </div>
-      {useOutletContent()}
+      {useKeepOutlets()}
     </div>
   );
 };

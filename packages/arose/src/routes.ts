@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs-extra";
 import type { AppData } from "./appData";
 import { DEFAULT_GLOBAL_LAYOUTS } from "./constants";
+import type { UserConfig } from "./config";
 
 export interface IRoute {
   element: any;
@@ -10,7 +11,25 @@ export interface IRoute {
   routes?: IRoute[];
 }
 
-const findTsxFile = async (paths: string) => {
+const getMainPath = ({ userConfig = {} }: { userConfig: UserConfig }) => {
+  let { mainPath = "index" } = userConfig;
+  if (mainPath.startsWith("/")) {
+    mainPath = mainPath.slice(1);
+  }
+  if (mainPath.endsWith("/")) {
+    mainPath = mainPath.slice(0, mainPath.length - 1);
+  }
+  return mainPath;
+};
+
+const findTsxFile = async ({
+  paths,
+  userConfig = {},
+}: {
+  paths: string;
+  userConfig: UserConfig;
+}) => {
+  const mainPath = getMainPath({ userConfig });
   const files = await readdirSync(paths);
   const list = [] as IRoute[];
   for (const item of files) {
@@ -24,7 +43,7 @@ const findTsxFile = async (paths: string) => {
       if (isFile) {
         list.push({
           element: `${absPath}/index`,
-          path: item === "index" ? "/" : `/${item}`,
+          path: item === mainPath ? "/" : `/${item}`,
         });
       }
     }
@@ -32,9 +51,15 @@ const findTsxFile = async (paths: string) => {
   return list;
 };
 
-export const getRoutes = ({ appData }: { appData: AppData }) => {
+export const getRoutes = ({
+  appData,
+  userConfig,
+}: {
+  appData: AppData;
+  userConfig: UserConfig;
+}) => {
   return new Promise(async (resolve: (value: IRoute[]) => void) => {
-    const routes = await findTsxFile(appData.paths.absPagesPath);
+    const routes = await findTsxFile({ paths: appData.paths.absPagesPath, userConfig });
     const layoutPath = path.resolve(appData.paths.absSrcPath, DEFAULT_GLOBAL_LAYOUTS);
     if (!existsSync(layoutPath)) {
       resolve(routes);

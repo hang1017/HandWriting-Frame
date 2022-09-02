@@ -2,7 +2,7 @@ import { existsSync } from "fs";
 import path from "path";
 import type { Server } from "http";
 import { build } from "esbuild";
-import type { Options as ProxyOptions } from "../compiled/http-proxy-middleware";
+import type { Options as ProxyOptions } from "http-proxy-middleware";
 import type { AppData } from "./appData";
 import { DEFAULT_CONFIG_FILE } from "./constants";
 
@@ -10,6 +10,7 @@ export interface UserConfig {
   title?: string;
   keepalive?: any[];
   proxy?: { [key: string]: ProxyOptions };
+  mainPath?: string;
 }
 export const getUserConfig = ({
   appData,

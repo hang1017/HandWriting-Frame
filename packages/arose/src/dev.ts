@@ -71,7 +71,7 @@ export const dev = async () => {
     });
 
     // 获取 routes 配置
-    const routes = await getRoutes({ appData });
+    const routes = await getRoutes({ appData, userConfig });
     // 生成项目主入口
     await generateEntry({ appData, routes, userConfig });
     // 生成 Html

@@ -1,5 +1,6 @@
 import React from "react";
-import { Image, Swiper, Toast, Grid, Space, List } from "antd-mobile";
+import { Image, Swiper, Toast, Grid, Space, List, Button } from "antd-mobile";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 const demoSrc =
@@ -85,9 +86,11 @@ const grids = colors.map((color) => (
 ));
 
 const Hello = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Swiper>{items}</Swiper>
+      <Button onClick={() => navigate("/pageOne")}>to PageOne</Button>
       <Space></Space>
       <Grid columns={3} gap={8}>
         {grids}
