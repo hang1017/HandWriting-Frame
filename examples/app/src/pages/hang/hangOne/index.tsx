@@ -10,7 +10,8 @@ const HangPage: FC<HangPageProps> = () => {
   return (
     <div>
       <div>Hello Arose</div>
-      <Button onClick={() => navigate("/hang/hangOne")}>to hangOne</Button>
+      <div>this is /hangOne</div>
+      <Button onClick={() => navigate(-1)}>back to hang</Button>
     </div>
   );
 };
