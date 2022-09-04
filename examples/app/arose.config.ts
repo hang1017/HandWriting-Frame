@@ -10,4 +10,5 @@ export default {
     },
   },
   headScripts: ["https://www.cmpassport.com/NumberAbility/jssdk/jssdk.min.js"],
+  retainLog: true,
 };

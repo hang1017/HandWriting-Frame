@@ -12,6 +12,7 @@ export interface UserConfig {
   proxy?: { [key: string]: ProxyOptions };
   mainPath?: string;
   headScripts?: string[];
+  retainLog?: boolean;
 }
 export const getUserConfig = ({
   appData,

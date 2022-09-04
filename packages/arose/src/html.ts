@@ -28,6 +28,8 @@ export const generateHtml = ({
   return new Promise((resolve, rejects) => {
     const title = userConfig?.title ?? appData.pkg.name ?? "arose";
     const headScripts = getHeadScripts(userConfig?.headScripts || []);
+    const { retainLog = false } = userConfig;
+
     const content = `
         <!DOCTYPE html>
         <html lang="en">
@@ -42,6 +44,17 @@ export const generateHtml = ({
             <div id="arose">
                 <span>loading...</span>
             </div>
+
+            ${
+              isProduction &&
+              !retainLog &&
+              `<script>
+              window.console.log = ()=>{};
+              window.console.info = ()=>{};
+              window.console.warn = ()=>{};
+              window.console.error = ()=>{};
+            </script>`
+            }
             <script src="${
               isProduction ? "." : `/${DEFAULT_OUTDIR}`
             }/${DEFAULT_FRAMEWORK_NAME}.js"></script>

@@ -7,6 +7,7 @@ import "./index.css";
 const Layout = () => {
   const [text] = useState("Hi~, click me1231");
   const { pathname } = useLocation();
+  console.log("this is layout page");
   return (
     <div>
       <div className="malita-layout">
