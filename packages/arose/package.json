@@ -1,0 +1,46 @@
+{
+  "name": "arose",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "bin": {
+    "arose": "bin/arose.js"
+  },
+  "scripts": {
+    "build": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild --loader:.node=file",
+    "build:client": "pnpm esbuild ./client/** --outdir=lib/client --bundle --external:esbuild",
+    "build:deps": "pnpm esno ../../scripts/bundleDeps.ts",
+    "watch": "pnpm build -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
+  },
+  "keywords": [],
+  "author": "xiaohuoni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
+  },
+  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
+  "dependencies": {
+    "@alitajs/postcss-plugin-px2rem": "^0.0.1",
+    "@umijs/utils": "4.0.0-rc.15",
+    "commander": "^9.1.0",
+    "esbuild": "^0.14.36",
+    "express": "^4.17.3",
+    "glob": "^8.0.1",
+    "http-proxy-middleware": "^2.0.6",
+    "portfinder": "^1.0.28",
+    "postcss": "^8.4.13",
+    "ws": "^8.5.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "description": "",
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/ws": "^8.5.3"
+  }
+}
