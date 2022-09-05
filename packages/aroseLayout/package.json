@@ -1,0 +1,31 @@
+{
+  "name": "@arosejs/layout",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "types": "lib.index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "pnpm build -- --watch"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hang1017/HandWriting-Frame.git"
+  },
+  "keywords": [],
+  "author": "xiaohuoni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hang1017/HandWriting-Frame/issues"
+  },
+  "homepage": "https://github.com/hang1017/HandWriting-Frame#readme",
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "description": ""
+}
